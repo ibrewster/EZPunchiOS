@@ -1,0 +1,606 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		18DBDF0013632BA000DEF563 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDEFF13632BA000DEF563 /* UIKit.framework */; };
+		18DBDF0213632BA000DEF563 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDF0113632BA000DEF563 /* Foundation.framework */; };
+		18DBDF0413632BA000DEF563 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDF0313632BA000DEF563 /* CoreGraphics.framework */; };
+		18DBDF0A13632BA000DEF563 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF0813632BA000DEF563 /* InfoPlist.strings */; };
+		18DBDF0D13632BA000DEF563 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF0C13632BA000DEF563 /* main.m */; };
+		18DBDF1013632BA000DEF563 /* EPunchClockPhoneAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF0F13632BA000DEF563 /* EPunchClockPhoneAppDelegate.m */; };
+		18DBDF1313632BA100DEF563 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF1113632BA100DEF563 /* MainWindow.xib */; };
+		18DBDF2613632BA100DEF563 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDEFF13632BA000DEF563 /* UIKit.framework */; };
+		18DBDF2713632BA100DEF563 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDF0113632BA000DEF563 /* Foundation.framework */; };
+		18DBDF2813632BA100DEF563 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDF0313632BA000DEF563 /* CoreGraphics.framework */; };
+		18DBDF3013632BA100DEF563 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF2E13632BA100DEF563 /* InfoPlist.strings */; };
+		18DBDF3313632BA100DEF563 /* EPunchClockPhoneTests.h in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF3213632BA100DEF563 /* EPunchClockPhoneTests.h */; };
+		18DBDF3513632BA100DEF563 /* EPunchClockPhoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF3413632BA100DEF563 /* EPunchClockPhoneTests.m */; };
+		18DBDF4013632EDE00DEF563 /* SettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF3E13632EDE00DEF563 /* SettingsView.xib */; };
+		18DBDF4113632EDE00DEF563 /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF3F13632EDE00DEF563 /* MainView.xib */; };
+		18DBDF4A13632F6300DEF563 /* FlipsideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF4313632F6300DEF563 /* FlipsideView.m */; };
+		18DBDF4B13632F6300DEF563 /* settingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF4513632F6300DEF563 /* settingsViewController.m */; };
+		18DBDF4C13632F6300DEF563 /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF4713632F6300DEF563 /* MainView.m */; };
+		18DBDF4D13632F6300DEF563 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF4913632F6300DEF563 /* MainViewController.m */; };
+		18DBDF5113632F9500DEF563 /* syncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF4F13632F9500DEF563 /* syncViewController.m */; };
+		18DBDF5213632F9500DEF563 /* syncViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF5013632F9500DEF563 /* syncViewController.xib */; };
+		18DBDF561363312400DEF563 /* punchTable.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF541363312400DEF563 /* punchTable.xcdatamodel */; };
+		18DBDF591363318400DEF563 /* punches.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DBDF581363318400DEF563 /* punches.m */; };
+		18DBDF61136332B300DEF563 /* iPhoneIcon(normal).png in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF60136332B300DEF563 /* iPhoneIcon(normal).png */; };
+		18DBDF631363335A00DEF563 /* iPhoneIcon(retna).png in Resources */ = {isa = PBXBuildFile; fileRef = 18DBDF621363335A00DEF563 /* iPhoneIcon(retna).png */; };
+		18E4563E136339210053EA71 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18E4563D136339210053EA71 /* CoreData.framework */; };
+		580C5CB3136617920076A62E /* sync.png in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CB2136617920076A62E /* sync.png */; };
+		580C5CB7136618E30076A62E /* History.png in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CB6136618E30076A62E /* History.png */; };
+		580C5CB9136619E70076A62E /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CB8136619E70076A62E /* gear.png */; };
+		580C5CBD136622040076A62E /* punchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580C5CBB136622040076A62E /* punchViewController.m */; };
+		580C5CBE136622040076A62E /* punchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CBC136622040076A62E /* punchView.xib */; };
+		588E7C8614BB9DE8002A1980 /* loginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588E7C8414BB9DE7002A1980 /* loginViewController.m */; };
+		588E7C8714BB9DE8002A1980 /* loginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 588E7C8514BB9DE7002A1980 /* loginViewController.xib */; };
+		58EA48E2137C630D0006CE20 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58EA48E0137C630D0006CE20 /* MainWindow-iPad.xib */; };
+		58EA48E6137C63500006CE20 /* HomeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA48E4137C63500006CE20 /* HomeView.m */; };
+		58EA48E7137C63500006CE20 /* HomeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58EA48E5137C63500006CE20 /* HomeView.xib */; };
+		58F8EB4F1365D90D0014F134 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F8EB4E1365D90D0014F134 /* Utilities.m */; };
+		58F8EB5113660F070014F134 /* Timeclock.png in Resources */ = {isa = PBXBuildFile; fileRef = 58F8EB5013660F070014F134 /* Timeclock.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		18DBDF2913632BA100DEF563 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18DBDEF213632BA000DEF563 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18DBDEFA13632BA000DEF563;
+			remoteInfo = EPunchClockPhone;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		18DBDEFB13632BA000DEF563 /* EZPunch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EZPunch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		18DBDEFF13632BA000DEF563 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		18DBDF0113632BA000DEF563 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		18DBDF0313632BA000DEF563 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		18DBDF0713632BA000DEF563 /* EZPunchPhone-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EZPunchPhone-Info.plist"; sourceTree = "<group>"; };
+		18DBDF0913632BA000DEF563 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		18DBDF0B13632BA000DEF563 /* EZPunchPhone-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EZPunchPhone-Prefix.pch"; sourceTree = "<group>"; };
+		18DBDF0C13632BA000DEF563 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		18DBDF0E13632BA000DEF563 /* EPunchClockPhoneAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPunchClockPhoneAppDelegate.h; sourceTree = "<group>"; };
+		18DBDF0F13632BA000DEF563 /* EPunchClockPhoneAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPunchClockPhoneAppDelegate.m; sourceTree = "<group>"; };
+		18DBDF1213632BA100DEF563 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		18DBDF2513632BA100DEF563 /* EZPunchPhoneTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EZPunchPhoneTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		18DBDF2D13632BA100DEF563 /* EZPunchPhoneTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EZPunchPhoneTests-Info.plist"; sourceTree = "<group>"; };
+		18DBDF2F13632BA100DEF563 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		18DBDF3113632BA100DEF563 /* EZPunchPhoneTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EZPunchPhoneTests-Prefix.pch"; sourceTree = "<group>"; };
+		18DBDF3213632BA100DEF563 /* EPunchClockPhoneTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPunchClockPhoneTests.h; sourceTree = "<group>"; };
+		18DBDF3413632BA100DEF563 /* EPunchClockPhoneTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPunchClockPhoneTests.m; sourceTree = "<group>"; };
+		18DBDF3E13632EDE00DEF563 /* SettingsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsView.xib; sourceTree = "<group>"; };
+		18DBDF3F13632EDE00DEF563 /* MainView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainView.xib; sourceTree = "<group>"; };
+		18DBDF4213632F6300DEF563 /* FlipsideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlipsideView.h; sourceTree = "<group>"; };
+		18DBDF4313632F6300DEF563 /* FlipsideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlipsideView.m; sourceTree = "<group>"; };
+		18DBDF4413632F6300DEF563 /* settingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = settingsViewController.h; sourceTree = "<group>"; };
+		18DBDF4513632F6300DEF563 /* settingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = settingsViewController.m; sourceTree = "<group>"; };
+		18DBDF4613632F6300DEF563 /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
+		18DBDF4713632F6300DEF563 /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
+		18DBDF4813632F6300DEF563 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		18DBDF4913632F6300DEF563 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		18DBDF4E13632F9500DEF563 /* syncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syncViewController.h; sourceTree = "<group>"; };
+		18DBDF4F13632F9500DEF563 /* syncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = syncViewController.m; sourceTree = "<group>"; };
+		18DBDF5013632F9500DEF563 /* syncViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = syncViewController.xib; sourceTree = "<group>"; };
+		18DBDF541363312400DEF563 /* punchTable.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; name = punchTable.xcdatamodel; path = ../punchTable.xcdatamodel; sourceTree = "<group>"; };
+		18DBDF571363318400DEF563 /* punches.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = punches.h; sourceTree = "<group>"; };
+		18DBDF581363318400DEF563 /* punches.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = punches.m; sourceTree = "<group>"; };
+		18DBDF60136332B300DEF563 /* iPhoneIcon(normal).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPhoneIcon(normal).png"; path = "../iPhoneIcon(normal).png"; sourceTree = "<group>"; };
+		18DBDF621363335A00DEF563 /* iPhoneIcon(retna).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPhoneIcon(retna).png"; path = "../iPhoneIcon(retna).png"; sourceTree = "<group>"; };
+		18E4563D136339210053EA71 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		580C5CB2136617920076A62E /* sync.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sync.png; sourceTree = "<group>"; };
+		580C5CB6136618E30076A62E /* History.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = History.png; sourceTree = "<group>"; };
+		580C5CB8136619E70076A62E /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
+		580C5CBA136622040076A62E /* punchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = punchViewController.h; sourceTree = "<group>"; };
+		580C5CBB136622040076A62E /* punchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = punchViewController.m; sourceTree = "<group>"; };
+		580C5CBC136622040076A62E /* punchView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = punchView.xib; sourceTree = "<group>"; };
+		588E7C8314BB9DE7002A1980 /* loginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loginViewController.h; sourceTree = "<group>"; };
+		588E7C8414BB9DE7002A1980 /* loginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = loginViewController.m; sourceTree = "<group>"; };
+		588E7C8514BB9DE7002A1980 /* loginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = loginViewController.xib; sourceTree = "<group>"; };
+		58EA48E1137C630D0006CE20 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "EPunchClockPhone/iPad/en.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		58EA48E3137C63500006CE20 /* HomeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeView.h; sourceTree = "<group>"; };
+		58EA48E4137C63500006CE20 /* HomeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeView.m; sourceTree = "<group>"; };
+		58EA48E5137C63500006CE20 /* HomeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeView.xib; sourceTree = "<group>"; };
+		58F8EB4D1365D90D0014F134 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		58F8EB4E1365D90D0014F134 /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
+		58F8EB5013660F070014F134 /* Timeclock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Timeclock.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		18DBDEF813632BA000DEF563 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18DBDF0013632BA000DEF563 /* UIKit.framework in Frameworks */,
+				18DBDF0213632BA000DEF563 /* Foundation.framework in Frameworks */,
+				18DBDF0413632BA000DEF563 /* CoreGraphics.framework in Frameworks */,
+				18E4563E136339210053EA71 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18DBDF2113632BA100DEF563 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18DBDF2613632BA100DEF563 /* UIKit.framework in Frameworks */,
+				18DBDF2713632BA100DEF563 /* Foundation.framework in Frameworks */,
+				18DBDF2813632BA100DEF563 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		18DBDEF013632BA000DEF563 = {
+			isa = PBXGroup;
+			children = (
+				58EA48DF137C63080006CE20 /* iPad */,
+				18DBDF0513632BA000DEF563 /* EZPunchPhone */,
+				18DBDF2B13632BA100DEF563 /* EPunchClockPhoneTests */,
+				18DBDEFE13632BA000DEF563 /* Frameworks */,
+				18DBDEFC13632BA000DEF563 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		18DBDEFC13632BA000DEF563 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				18DBDEFB13632BA000DEF563 /* EZPunch.app */,
+				18DBDF2513632BA100DEF563 /* EZPunchPhoneTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		18DBDEFE13632BA000DEF563 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				18E4563D136339210053EA71 /* CoreData.framework */,
+				18DBDEFF13632BA000DEF563 /* UIKit.framework */,
+				18DBDF0113632BA000DEF563 /* Foundation.framework */,
+				18DBDF0313632BA000DEF563 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		18DBDF0513632BA000DEF563 /* EZPunchPhone */ = {
+			isa = PBXGroup;
+			children = (
+				58F8EB4E1365D90D0014F134 /* Utilities.m */,
+				58F8EB4D1365D90D0014F134 /* Utilities.h */,
+				18DBDF571363318400DEF563 /* punches.h */,
+				18DBDF581363318400DEF563 /* punches.m */,
+				18DBDF4E13632F9500DEF563 /* syncViewController.h */,
+				18DBDF4F13632F9500DEF563 /* syncViewController.m */,
+				18DBDF5013632F9500DEF563 /* syncViewController.xib */,
+				18DBDF4213632F6300DEF563 /* FlipsideView.h */,
+				18DBDF4313632F6300DEF563 /* FlipsideView.m */,
+				18DBDF4413632F6300DEF563 /* settingsViewController.h */,
+				18DBDF4513632F6300DEF563 /* settingsViewController.m */,
+				18DBDF4613632F6300DEF563 /* MainView.h */,
+				18DBDF4713632F6300DEF563 /* MainView.m */,
+				18DBDF4813632F6300DEF563 /* MainViewController.h */,
+				18DBDF4913632F6300DEF563 /* MainViewController.m */,
+				18DBDF3E13632EDE00DEF563 /* SettingsView.xib */,
+				18DBDF3F13632EDE00DEF563 /* MainView.xib */,
+				18DBDF0E13632BA000DEF563 /* EPunchClockPhoneAppDelegate.h */,
+				18DBDF0F13632BA000DEF563 /* EPunchClockPhoneAppDelegate.m */,
+				18DBDF1113632BA100DEF563 /* MainWindow.xib */,
+				580C5CBA136622040076A62E /* punchViewController.h */,
+				580C5CBB136622040076A62E /* punchViewController.m */,
+				580C5CBC136622040076A62E /* punchView.xib */,
+				18DBDF0613632BA000DEF563 /* Supporting Files */,
+				588E7C8314BB9DE7002A1980 /* loginViewController.h */,
+				588E7C8414BB9DE7002A1980 /* loginViewController.m */,
+				588E7C8514BB9DE7002A1980 /* loginViewController.xib */,
+			);
+			name = EZPunchPhone;
+			path = EPunchClockPhone;
+			sourceTree = "<group>";
+		};
+		18DBDF0613632BA000DEF563 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				580C5CB8136619E70076A62E /* gear.png */,
+				580C5CB6136618E30076A62E /* History.png */,
+				580C5CB2136617920076A62E /* sync.png */,
+				58F8EB5013660F070014F134 /* Timeclock.png */,
+				18DBDF621363335A00DEF563 /* iPhoneIcon(retna).png */,
+				18DBDF60136332B300DEF563 /* iPhoneIcon(normal).png */,
+				18DBDF541363312400DEF563 /* punchTable.xcdatamodel */,
+				18DBDF0713632BA000DEF563 /* EZPunchPhone-Info.plist */,
+				18DBDF0813632BA000DEF563 /* InfoPlist.strings */,
+				18DBDF0B13632BA000DEF563 /* EZPunchPhone-Prefix.pch */,
+				18DBDF0C13632BA000DEF563 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		18DBDF2B13632BA100DEF563 /* EPunchClockPhoneTests */ = {
+			isa = PBXGroup;
+			children = (
+				18DBDF3213632BA100DEF563 /* EPunchClockPhoneTests.h */,
+				18DBDF3413632BA100DEF563 /* EPunchClockPhoneTests.m */,
+				18DBDF2C13632BA100DEF563 /* Supporting Files */,
+			);
+			path = EPunchClockPhoneTests;
+			sourceTree = "<group>";
+		};
+		18DBDF2C13632BA100DEF563 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				18DBDF2D13632BA100DEF563 /* EZPunchPhoneTests-Info.plist */,
+				18DBDF2E13632BA100DEF563 /* InfoPlist.strings */,
+				18DBDF3113632BA100DEF563 /* EZPunchPhoneTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		58EA48DF137C63080006CE20 /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+				58EA48E0137C630D0006CE20 /* MainWindow-iPad.xib */,
+				58EA48E3137C63500006CE20 /* HomeView.h */,
+				58EA48E4137C63500006CE20 /* HomeView.m */,
+				58EA48E5137C63500006CE20 /* HomeView.xib */,
+			);
+			name = iPad;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		18DBDEFA13632BA000DEF563 /* EZPunch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18DBDF3813632BA100DEF563 /* Build configuration list for PBXNativeTarget "EZPunch" */;
+			buildPhases = (
+				18DBDEF913632BA000DEF563 /* Resources */,
+				18DBDEF713632BA000DEF563 /* Sources */,
+				18DBDEF813632BA000DEF563 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EZPunch;
+			productName = EPunchClockPhone;
+			productReference = 18DBDEFB13632BA000DEF563 /* EZPunch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		18DBDF2413632BA100DEF563 /* EZPunchPhoneTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18DBDF3B13632BA100DEF563 /* Build configuration list for PBXNativeTarget "EZPunchPhoneTests" */;
+			buildPhases = (
+				18DBDF2013632BA100DEF563 /* Sources */,
+				18DBDF2113632BA100DEF563 /* Frameworks */,
+				18DBDF2213632BA100DEF563 /* Resources */,
+				18DBDF2313632BA100DEF563 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				18DBDF2A13632BA100DEF563 /* PBXTargetDependency */,
+			);
+			name = EZPunchPhoneTests;
+			productName = EPunchClockPhoneTests;
+			productReference = 18DBDF2513632BA100DEF563 /* EZPunchPhoneTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		18DBDEF213632BA000DEF563 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 18DBDEF513632BA000DEF563 /* Build configuration list for PBXProject "EZPunchPhone" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 18DBDEF013632BA000DEF563;
+			productRefGroup = 18DBDEFC13632BA000DEF563 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				18DBDEFA13632BA000DEF563 /* EZPunch */,
+				18DBDF2413632BA100DEF563 /* EZPunchPhoneTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		18DBDEF913632BA000DEF563 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18DBDF0A13632BA000DEF563 /* InfoPlist.strings in Resources */,
+				18DBDF1313632BA100DEF563 /* MainWindow.xib in Resources */,
+				18DBDF4013632EDE00DEF563 /* SettingsView.xib in Resources */,
+				18DBDF4113632EDE00DEF563 /* MainView.xib in Resources */,
+				18DBDF5213632F9500DEF563 /* syncViewController.xib in Resources */,
+				18DBDF61136332B300DEF563 /* iPhoneIcon(normal).png in Resources */,
+				18DBDF631363335A00DEF563 /* iPhoneIcon(retna).png in Resources */,
+				58F8EB5113660F070014F134 /* Timeclock.png in Resources */,
+				580C5CB3136617920076A62E /* sync.png in Resources */,
+				580C5CB7136618E30076A62E /* History.png in Resources */,
+				580C5CB9136619E70076A62E /* gear.png in Resources */,
+				580C5CBE136622040076A62E /* punchView.xib in Resources */,
+				58EA48E2137C630D0006CE20 /* MainWindow-iPad.xib in Resources */,
+				58EA48E7137C63500006CE20 /* HomeView.xib in Resources */,
+				588E7C8714BB9DE8002A1980 /* loginViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18DBDF2213632BA100DEF563 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18DBDF3013632BA100DEF563 /* InfoPlist.strings in Resources */,
+				18DBDF3313632BA100DEF563 /* EPunchClockPhoneTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		18DBDF2313632BA100DEF563 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		18DBDEF713632BA000DEF563 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18DBDF0D13632BA000DEF563 /* main.m in Sources */,
+				18DBDF1013632BA000DEF563 /* EPunchClockPhoneAppDelegate.m in Sources */,
+				18DBDF4A13632F6300DEF563 /* FlipsideView.m in Sources */,
+				18DBDF4B13632F6300DEF563 /* settingsViewController.m in Sources */,
+				18DBDF4C13632F6300DEF563 /* MainView.m in Sources */,
+				18DBDF4D13632F6300DEF563 /* MainViewController.m in Sources */,
+				18DBDF5113632F9500DEF563 /* syncViewController.m in Sources */,
+				18DBDF561363312400DEF563 /* punchTable.xcdatamodel in Sources */,
+				18DBDF591363318400DEF563 /* punches.m in Sources */,
+				58F8EB4F1365D90D0014F134 /* Utilities.m in Sources */,
+				580C5CBD136622040076A62E /* punchViewController.m in Sources */,
+				58EA48E6137C63500006CE20 /* HomeView.m in Sources */,
+				588E7C8614BB9DE8002A1980 /* loginViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18DBDF2013632BA100DEF563 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18DBDF3513632BA100DEF563 /* EPunchClockPhoneTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		18DBDF2A13632BA100DEF563 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 18DBDEFA13632BA000DEF563 /* EZPunch */;
+			targetProxy = 18DBDF2913632BA100DEF563 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		18DBDF0813632BA000DEF563 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				18DBDF0913632BA000DEF563 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		18DBDF1113632BA100DEF563 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				18DBDF1213632BA100DEF563 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		18DBDF2E13632BA100DEF563 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				18DBDF2F13632BA100DEF563 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		58EA48E0137C630D0006CE20 /* MainWindow-iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				58EA48E1137C630D0006CE20 /* en */,
+			);
+			name = "MainWindow-iPad.xib";
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		18DBDF3613632BA100DEF563 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		18DBDF3713632BA100DEF563 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		18DBDF3913632BA100DEF563 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EPunchClockPhone/EZPunchPhone-Prefix.pch";
+				INFOPLIST_FILE = "EPunchClockPhone/EZPunchPhone-Info.plist";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		18DBDF3A13632BA100DEF563 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EPunchClockPhone/EZPunchPhone-Prefix.pch";
+				INFOPLIST_FILE = "EPunchClockPhone/EZPunchPhone-Info.plist";
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		18DBDF3C13632BA100DEF563 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/EPunchClockPhone.app/EPunchClockPhone";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EPunchClockPhoneTests/EZPunchPhoneTests-Prefix.pch";
+				INFOPLIST_FILE = "EPunchClockPhoneTests/EZPunchPhoneTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = EZPunchPhoneTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		18DBDF3D13632BA100DEF563 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/EPunchClockPhone.app/EPunchClockPhone";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EPunchClockPhoneTests/EZPunchPhoneTests-Prefix.pch";
+				INFOPLIST_FILE = "EPunchClockPhoneTests/EZPunchPhoneTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = EZPunchPhoneTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		18DBDEF513632BA000DEF563 /* Build configuration list for PBXProject "EZPunchPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18DBDF3613632BA100DEF563 /* Debug */,
+				18DBDF3713632BA100DEF563 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18DBDF3813632BA100DEF563 /* Build configuration list for PBXNativeTarget "EZPunch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18DBDF3913632BA100DEF563 /* Debug */,
+				18DBDF3A13632BA100DEF563 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18DBDF3B13632BA100DEF563 /* Build configuration list for PBXNativeTarget "EZPunchPhoneTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18DBDF3C13632BA100DEF563 /* Debug */,
+				18DBDF3D13632BA100DEF563 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 18DBDEF213632BA000DEF563 /* Project object */;
+}

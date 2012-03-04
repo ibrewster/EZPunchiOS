@@ -1,0 +1,91 @@
+// !$*UTF8*$!
+{
+	18DBDEF213632BA000DEF563 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 58C63A681365D7D3005241B9 /* EPunchClockPhone */;
+		activeTarget = 18DBDEFA13632BA000DEF563 /* EPunchClockPhone */;
+		codeSenseManager = 58C63A801365D7DF005241B9 /* Code sense */;
+		executables = (
+			58C63A681365D7D3005241B9 /* EPunchClockPhone */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					687,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 325540988;
+			PBXWorkspaceStateSaveDate = 325540988;
+		};
+		sourceControlManager = 58C63A7F1365D7DF005241B9 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	18DBDEFA13632BA000DEF563 /* EPunchClockPhone */ = {
+		activeExec = 0;
+		executables = (
+			58C63A681365D7D3005241B9 /* EPunchClockPhone */,
+		);
+	};
+	18DBDF2413632BA100DEF563 /* EPunchClockPhoneTests */ = {
+		activeExec = 0;
+	};
+	58C63A681365D7D3005241B9 /* EPunchClockPhone */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = EPunchClockPhone;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	58C63A7F1365D7DF005241B9 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	58C63A801365D7DF005241B9 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}

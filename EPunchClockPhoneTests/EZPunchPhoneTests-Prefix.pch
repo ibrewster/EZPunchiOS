@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'EPunchClockPhoneTests' target in the 'EPunchClockPhoneTests' project
+//
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+#endif
