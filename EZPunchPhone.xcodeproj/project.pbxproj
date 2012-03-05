@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18AD2ADF15044EDE000E9DAD /* EZCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AD2ADE15044EDE000E9DAD /* EZCommunicator.m */; };
 		18DBDF0013632BA000DEF563 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDEFF13632BA000DEF563 /* UIKit.framework */; };
 		18DBDF0213632BA000DEF563 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDF0113632BA000DEF563 /* Foundation.framework */; };
 		18DBDF0413632BA000DEF563 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DBDF0313632BA000DEF563 /* CoreGraphics.framework */; };
@@ -58,6 +59,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18AD2ADD15044EDE000E9DAD /* EZCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EZCommunicator.h; sourceTree = "<group>"; };
+		18AD2ADE15044EDE000E9DAD /* EZCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EZCommunicator.m; sourceTree = "<group>"; };
 		18DBDEFB13632BA000DEF563 /* EZPunch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EZPunch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18DBDEFF13632BA000DEF563 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		18DBDF0113632BA000DEF563 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -198,6 +201,8 @@
 				588E7C8314BB9DE7002A1980 /* loginViewController.h */,
 				588E7C8414BB9DE7002A1980 /* loginViewController.m */,
 				588E7C8514BB9DE7002A1980 /* loginViewController.xib */,
+				18AD2ADD15044EDE000E9DAD /* EZCommunicator.h */,
+				18AD2ADE15044EDE000E9DAD /* EZCommunicator.m */,
 			);
 			name = EZPunchPhone;
 			path = EPunchClockPhone;
@@ -369,6 +374,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F8EB4F1365D90D0014F134 /* Utilities.m in Sources */,
 				18DBDF0D13632BA000DEF563 /* main.m in Sources */,
 				18DBDF1013632BA000DEF563 /* EPunchClockPhoneAppDelegate.m in Sources */,
 				18DBDF4A13632F6300DEF563 /* FlipsideView.m in Sources */,
@@ -378,10 +384,10 @@
 				18DBDF5113632F9500DEF563 /* syncViewController.m in Sources */,
 				18DBDF561363312400DEF563 /* punchTable.xcdatamodel in Sources */,
 				18DBDF591363318400DEF563 /* punches.m in Sources */,
-				58F8EB4F1365D90D0014F134 /* Utilities.m in Sources */,
 				580C5CBD136622040076A62E /* punchViewController.m in Sources */,
 				58EA48E6137C63500006CE20 /* HomeView.m in Sources */,
 				588E7C8614BB9DE8002A1980 /* loginViewController.m in Sources */,
+				18AD2ADF15044EDE000E9DAD /* EZCommunicator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

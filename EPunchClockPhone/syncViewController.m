@@ -592,26 +592,29 @@
 	if (fetchResults == nil) {
         // Handle the error.
 	}
-	NSMutableString *data=[NSMutableString stringWithCapacity:20];
+	//NSMutableString *data=[NSMutableString stringWithCapacity:20];
 	
     //submit each punch to the server
 	for (int i=0; i<[fetchResults count]; i++) {
-		[data setString:@"NewPunch\n"];
+//		[data setString:@"NewPunch\n"];
 		punch=[fetchResults objectAtIndex:i];
-		[data appendFormat:@"%@\n",punch.user];
-		[data appendFormat:@"%@\n",punch.punchtype];
-		[data appendFormat:@"%@T%@\n",punch.punchdate,punch.punchtime];
-		
-		if(punch.notes==nil)
-			punch.notes=@"";
-		[data appendFormat:@"%@\n",punch.notes];
-		NSString *location=[[NSUserDefaults standardUserDefaults] stringForKey:@"location"];
-		if (location==nil) {
-			location=@"iPhone";
-		}
-		[data appendFormat:@"%@|",location];
-		
-		[self send:[data dataUsingEncoding:NSASCIIStringEncoding]];
+        NSData *punchData=encodePunchForSending(punch.user, punch.punchtype, 
+                                                punch.punchdate, punch.punchtime, 
+                                                punch.notes);
+//		[data appendFormat:@"%@\n",punch.user];
+//		[data appendFormat:@"%@\n",punch.punchtype];
+//		[data appendFormat:@"%@T%@\n",punch.punchdate,punch.punchtime];
+//		
+//		if(punch.notes==nil)
+//			punch.notes=@"";
+//		[data appendFormat:@"%@\n",punch.notes];
+//		NSString *location=[[NSUserDefaults standardUserDefaults] stringForKey:@"location"];
+//		if (location==nil) {
+//			location=@"iPhone";
+//		}
+//		[data appendFormat:@"%@|",location];
+		[[utils communicator] sendDataWithData:punchData];
+		//[self send:punchData];
 	}
 	
     //clear the punch database

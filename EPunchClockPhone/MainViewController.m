@@ -80,7 +80,21 @@
 }
 
 - (IBAction)recordPunch:(id)sender{
-	
+	BOOL canSeeServer=checkNetwork();
+    if (!canSeeServer)
+    {
+        UIAlertView *errorAlert = [[UIAlertView alloc]
+								   initWithTitle: @"Server Not Reachable"
+								   message:@"Punch will be stored locally untill server can be reached"
+								   delegate:nil
+								   cancelButtonTitle:@"OK"
+								   otherButtonTitles:nil];
+		
+		
+		[errorAlert show];
+		[errorAlert release];
+    }
+
 	if (!self.managedObjectContext) {
 		UIAlertView *errorAlert = [[UIAlertView alloc]
 								   initWithTitle: @"Unable to record punch"

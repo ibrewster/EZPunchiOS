@@ -8,17 +8,76 @@
 
 #import "Utilities.h"
 
+BOOL checkNetwork()
+{
+    NSString *hostname=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualHost"];
+    NSString *portString=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualPort"];
+    if(hostname==nil || portString==nil)
+        return NO;
+    int port=[portString intValue];
+    CFReadStreamRef readStream;
+	CFWriteStreamRef writeStream;
+	CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)hostname, port, &readStream, &writeStream);
+	
+	if(!readStream || !writeStream)
+	{
+		return NO;
+	}
+    NSInputStream * readNSStream=(NSInputStream *)readStream;
+    NSOutputStream * writeNSStream=(NSOutputStream *)writeStream;
+    [readNSStream open];
+    [writeNSStream open];
+    NSStreamStatus inStreamStatus=[readNSStream streamStatus];
+    NSStreamStatus outStreamStatus=[writeNSStream streamStatus];
+    
+    while (inStreamStatus==NSStreamStatusOpening) {
+        inStreamStatus=[readNSStream streamStatus];
+    }
+    
+    outStreamStatus=[writeNSStream streamStatus];
+    
+    if(inStreamStatus!=NSStreamStatusOpen || 
+       outStreamStatus!=NSStreamStatusOpen)
+    {
+        [readNSStream close];
+        [writeNSStream close];
+        return NO;
+    }
+    [readNSStream close];
+    [writeNSStream close];
+    return YES;
+}
 
+NSData *encodePunchForSending(NSString *user, NSString *type,NSString *date, NSString *time, NSString *notes)
+{
+    NSMutableString *data=[NSMutableString stringWithCapacity:20];
+    [data setString:@"NewPunch\n"];
+    [data appendFormat:@"%@\n",user];
+    [data appendFormat:@"%@\n",type];
+    [data appendFormat:@"%@T%@\n",date,time];
+    
+    if(notes==nil)
+        notes=@"";
+    [data appendFormat:@"%@\n",notes];
+    NSString *location=[[NSUserDefaults standardUserDefaults] stringForKey:@"location"];
+    if (location==nil) {
+        location=@"iPhone";
+    }
+    [data appendFormat:@"%@|",location];
+    return [data dataUsingEncoding:NSASCIIStringEncoding];
+}
 
 @implementation Utilities
 
 @synthesize managedObjectContext;
+@synthesize communicator;
 
 -(id) init
 {
 	self=[super init];
 	if(self){
 		managedObjectContext=[self managedObjectContext];
+        communicator=[[[EZCommunicator alloc] init] retain];
 	}
 	return self;
 }
