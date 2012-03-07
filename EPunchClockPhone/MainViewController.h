@@ -8,7 +8,7 @@
 
 #import "Utilities.h"
 
-@interface MainViewController : UIViewController <UITextFieldDelegate>{
+@interface MainViewController : UIViewController <UITextFieldDelegate, UIAlertViewDelegate>{
 	//id <MainViewControllerDelegate> delegate;
 	UITextField *textField;
 	UILabel *timeLabel;
@@ -46,6 +46,7 @@
 - (IBAction)recordPunch:(id)sender;
 //- (IBAction)showInfo;
 - (IBAction)updatePunchType;
+- (BOOL)storeLocalPunch;
 - (void)setUtilsWithUtils:(Utilities *)newUtils;
 
 @end

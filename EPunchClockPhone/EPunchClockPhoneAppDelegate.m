@@ -22,6 +22,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	id checkForWarnSetting=[[NSUserDefaults standardUserDefaults] objectForKey:@"showLocalWarning"];
+	
+	if(checkForWarnSetting==nil) //key does not exist
+		[[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"showLocalWarning"];
     // Override point for customization after application launch.
     // Add the tab bar controller's current view as a subview of the window
 	
@@ -42,6 +46,14 @@
 
     //self.window.rootViewController = self.tabBarController;
 	util=[[Utilities alloc] init];
+	
+	NSString *hostname=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualHost"];
+    NSString *portString=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualPort"];
+    if(hostname!=nil || portString!=nil)
+	{
+		int port=[portString intValue];
+		[util.communicator initalizeConnectionForServer:hostname WithPort:port];
+	}
 	NSArray *views=[self.tabBarController viewControllers];
 	
 	punchViewController *punchesTab=[views objectAtIndex:2];

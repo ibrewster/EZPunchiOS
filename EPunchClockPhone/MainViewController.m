@@ -81,63 +81,106 @@
 
 - (IBAction)recordPunch:(id)sender{
 	BOOL canSeeServer=checkNetwork();
-    if (!canSeeServer)
-    {
-        UIAlertView *errorAlert = [[UIAlertView alloc]
-								   initWithTitle: @"Server Not Reachable"
-								   message:@"Punch will be stored locally untill server can be reached"
-								   delegate:nil
-								   cancelButtonTitle:@"OK"
-								   otherButtonTitles:nil];
-		
-		
-		[errorAlert show];
-		[errorAlert release];
-    }
-
-	if (!self.managedObjectContext) {
-		UIAlertView *errorAlert = [[UIAlertView alloc]
-								   initWithTitle: @"Unable to record punch"
-								   message:@"No data file found. Please report this error."
-								   delegate:nil
-								   cancelButtonTitle:@"OK"
-								   otherButtonTitles:nil];
-		
-		
-		[errorAlert show];
-		[errorAlert release];
-		return;
-
-	}
-
-	punches *punch = (punches *)[NSEntityDescription insertNewObjectForEntityForName:@"punches" inManagedObjectContext:managedObjectContext];
-	
+	BOOL punchStored=NO;
 	NSDateFormatter *dateFormatter =[[[NSDateFormatter alloc] init] autorelease];
-	
 	[dateFormatter setDateFormat:@"YYYY-MM-dd"];
 	NSString *punchDate=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
 	
 	[dateFormatter setDateFormat:@"HH:mm:ss"];
 	NSString *punchTime=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
-	NSString *notes=textField.text;
 	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
-
+	NSString *notes=textField.text;
+	
 	textField.text=nil;
 	
-	[punch setUser:user];
-	[punch setNotes:notes];
-	[punch setPunchdate:punchDate];
-	[punch setPunchtime:punchTime];
-	[punch setPunchtype:punchtype];
-	[punch setTimestamp:[NSDate date]];
-	
-	NSString *punchAlert;
-	NSError *error;
-	if (![managedObjectContext save:&error]){
-		punchAlert=[[NSString alloc] initWithFormat:@"Unable to record punch"];
+    if (!canSeeServer || ![utils.communicator initalized])
+    {
+		if([[NSUserDefaults standardUserDefaults] boolForKey:@"showLocalWarning"])
+		{
+			UIAlertView *errorAlert = [[UIAlertView alloc]
+									   initWithTitle: @"Server Not Reachable"
+									   message:@"Punch will be stored locally until server can be reached"
+									   delegate:nil
+									   cancelButtonTitle:@"OK"
+									   otherButtonTitles:nil];
+			
+			
+			[errorAlert show];
+			[errorAlert release];
+		}
+		punchStored=[self storeLocalPunch];
+    }
+	else {
+		NSLog(@"Sent punch of type: %@",punchtype);
+		NSData *encodedPunch=encodePunchForSending(user, punchtype, punchDate, punchTime, notes);
+		if ([utils.communicator openConnection]) {
+			punchStored=[utils.communicator sendDataWithData:encodedPunch];
+			
+			NSFetchRequest *request = [[NSFetchRequest alloc] init];
+			NSEntityDescription *entity = [NSEntityDescription entityForName:@"punches" inManagedObjectContext:managedObjectContext];
+			[request setEntity:entity];
+			NSSortDescriptor *dateColumn = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
+			NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:dateColumn, nil];
+			[request setSortDescriptors:sortDescriptors];
+			[sortDescriptors release];
+			[dateColumn release];
+			
+			NSError *error;
+			NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
+
+			if ([fetchResults count]>0) {
+				UIAlertView *foundAlert = [[UIAlertView alloc]
+										   initWithTitle: @"Local punches detected"
+										   message:@"Would you like to sync all "
+										   "locally stored punches to this server now?"
+										   delegate:self
+										   cancelButtonTitle:@"NO"
+										   otherButtonTitles:@"YES", nil];
+				[foundAlert show];
+				[foundAlert release];
+
+			}
+			
+			[utils.communicator closeConnection];
+		}
+		else {
+			if([[NSUserDefaults standardUserDefaults] boolForKey:@"showLocalWarning"])
+			{
+				UIAlertView *errorAlert = [[UIAlertView alloc]
+										   initWithTitle: @"Unable to connect to server"
+										   message:@"Punch will be stored locally until server can be reached"
+										   delegate:nil
+										   cancelButtonTitle:@"OK"
+										   otherButtonTitles:nil];
+				[errorAlert show];
+				[errorAlert release];
+			}
+			punchStored=[self storeLocalPunch];
+		}
 	}
-	else
-	{
+	
+	if (punchStored) {
+		NSString *punchAlert;
+		[dateFormatter setDateStyle:NSDateFormatterNoStyle];
+		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		punchAlert=[[NSString alloc] initWithFormat:@"Your %@ punch for %@ on %@ at %@ has been recorded.\n\nNotes: %@", 
+					punchtype,user,punchDate,
+					[dateFormatter stringFromDate:currentDate],notes];
+		[punchDate release];
+		[punchTime release];
+		
+		
+		UIAlertView *errorAlert = [[UIAlertView alloc]
+								   initWithTitle: @"Punch Status"
+								   message:punchAlert
+								   delegate:nil
+								   cancelButtonTitle:@"OK"
+								   otherButtonTitles:nil];
+		
+		
+		[errorAlert show];
+		[errorAlert release];
+		[punchAlert release];
 		if(punchtype==@"in")
 		{
 			punchtype=@"out";
@@ -149,32 +192,61 @@
 			[usersDict setValue:@"out" forKey:user];
 		}
 		[[NSUserDefaults standardUserDefaults] setObject:usersDict forKey:@"users"];
-		NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-		[dateFormatter setDateStyle:NSDateFormatterNoStyle];
-		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-		punchAlert=[[NSString alloc] initWithFormat:@"Your %@ punch for %@ on %@ at %@ has been recorded.\n\nNotes: %@", 
-						   [usersDict valueForKey:user],user,punchDate,
-					[dateFormatter stringFromDate:currentDate],notes];
+		
+		NSString *buttonTitle=[[NSString alloc] initWithFormat:@"Punch %@", punchtype];
+		[punchButton setTitle:buttonTitle forState:UIControlStateNormal];
+		punchButton.titleLabel.text=buttonTitle;
+		
 	}
-	[punchDate release];
-	[punchTime release];
-	 
 	
-	UIAlertView *errorAlert = [[UIAlertView alloc]
-							   initWithTitle: @"Punch Status"
-							   message:punchAlert
-							   delegate:nil
-							   cancelButtonTitle:@"OK"
-							   otherButtonTitles:nil];
+		//[buttonTitle release];
+}
 
+-(BOOL)storeLocalPunch
+{
+	if (!self.managedObjectContext) {
+		UIAlertView *errorAlert = [[UIAlertView alloc]
+								   initWithTitle: @"Unable to record punch"
+								   message:@"No data file found. Please report this error."
+								   delegate:nil
+								   cancelButtonTitle:@"OK"
+								   otherButtonTitles:nil];
+		
+		
+		[errorAlert show];
+		[errorAlert release];
+		return NO;
+		
+	}
 	
-    [errorAlert show];
-    [errorAlert release];
-	[punchAlert release];
-	NSString *buttonTitle=[[NSString alloc] initWithFormat:@"Punch %@", punchtype];
-	[punchButton setTitle:buttonTitle forState:UIControlStateNormal];
-	punchButton.titleLabel.text=buttonTitle;
-	//[buttonTitle release];
+	punches *punch = (punches *)[NSEntityDescription insertNewObjectForEntityForName:@"punches" inManagedObjectContext:managedObjectContext];
+	
+	NSDateFormatter *dateFormatter =[[[NSDateFormatter alloc] init] autorelease];
+	
+	[dateFormatter setDateFormat:@"YYYY-MM-dd"];
+	NSString *punchDate=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
+	
+	[dateFormatter setDateFormat:@"HH:mm:ss"];
+	NSString *punchTime=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
+	NSString *notes=textField.text;
+	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
+	
+	textField.text=nil;
+	
+	[punch setUser:user];
+	[punch setNotes:notes];
+	[punch setPunchdate:punchDate];
+	[punch setPunchtime:punchTime];
+	[punch setPunchtype:punchtype];
+	[punch setTimestamp:[NSDate date]];
+	
+	NSError *error;
+	
+	if (![managedObjectContext save:&error]){
+		return NO;
+	}
+	return YES;
+
 }
 
 - (IBAction)setTime:(id)sender {
@@ -274,46 +346,6 @@
  }
 
 
-
-//- (void)flipsideViewControllerDidFinish:(FlipsideViewController *)controller {
-//
-//	//TODO: Figure out how to set this from within the view controller.
-//	if ([controller usersDict]) //would prefer to explicitly set this from with the view controller, but I don't know how
-//	{
-//		self.usersDict=[NSMutableDictionary dictionaryWithDictionary:controller.usersDict];
-//	}
-//	useTimeRounding=[[NSUserDefaults standardUserDefaults] boolForKey:@"useRounding"];
-//	[self updatePunchType];
-//
-//	self.userLabel.text=[[NSString alloc] initWithFormat:@"Current user: %@",[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"]];
-//	[self dismissModalViewControllerAnimated:YES];
-//	
-//}
-
-
-//- (IBAction)showInfo {    
-//	
-//
-//	FlipsideViewController *controller = [[FlipsideViewController alloc] initWithNibName:@"FlipsideView" bundle:nil];
-//	controller.delegate = self;
-//	controller.arrayUsers=[[usersDict allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-//	controller.managedObjectContext=managedObjectContext;
-//	[controller setTitle:@"Options"];
-//	
-//	controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//		
-//	UINavigationController *navigationController=[[UINavigationController alloc] initWithRootViewController:controller];
-//	navigationController.navigationBar.barStyle=UIBarStyleBlack;
-//	controller.navigationController=navigationController;
-//	
-//	
-//	[self presentModalViewController:navigationController animated:YES];
-//	
-//	[controller release];
-//}
-
-
-
 /*
  // Override to allow orientations other than the default portrait orientation.
  - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -380,6 +412,24 @@
     [timeLabel release];
     //[notes release];	
     [super dealloc];
+}
+
+#pragma mark Alert View Delegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex==1) {
+		[utils.communicator openConnection];
+		[utils.communicator sendPunchesFromContext:managedObjectContext];
+		[utils.communicator closeConnection];
+		UIAlertView *completeMessage = [[UIAlertView alloc]
+								   initWithTitle: @"Sync Complete"
+								   message:nil
+								   delegate:nil
+								   cancelButtonTitle:@"OK"
+								   otherButtonTitles:nil];
+		[completeMessage show];
+		[completeMessage release];
+	}
 }
 
 

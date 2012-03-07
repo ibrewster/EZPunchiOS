@@ -185,11 +185,11 @@
 				18DBDF4313632F6300DEF563 /* FlipsideView.m */,
 				18DBDF4413632F6300DEF563 /* settingsViewController.h */,
 				18DBDF4513632F6300DEF563 /* settingsViewController.m */,
+				18DBDF3E13632EDE00DEF563 /* SettingsView.xib */,
 				18DBDF4613632F6300DEF563 /* MainView.h */,
 				18DBDF4713632F6300DEF563 /* MainView.m */,
 				18DBDF4813632F6300DEF563 /* MainViewController.h */,
 				18DBDF4913632F6300DEF563 /* MainViewController.m */,
-				18DBDF3E13632EDE00DEF563 /* SettingsView.xib */,
 				18DBDF3F13632EDE00DEF563 /* MainView.xib */,
 				18DBDF0E13632BA000DEF563 /* EPunchClockPhoneAppDelegate.h */,
 				18DBDF0F13632BA000DEF563 /* EPunchClockPhoneAppDelegate.m */,
@@ -301,6 +301,9 @@
 /* Begin PBXProject section */
 		18DBDEF213632BA000DEF563 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 18DBDEF513632BA000DEF563 /* Build configuration list for PBXProject "EZPunchPhone" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -493,6 +496,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EPunchClockPhone/EZPunchPhone-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "EPunchClockPhone/EZPunchPhone-Info.plist";
 				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
@@ -520,6 +525,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EPunchClockPhone/EZPunchPhone-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "EPunchClockPhone/EZPunchPhone-Info.plist";
 				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
@@ -543,6 +550,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EPunchClockPhoneTests/EZPunchPhoneTests-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "EPunchClockPhoneTests/EZPunchPhoneTests-Info.plist";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -565,6 +573,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EPunchClockPhoneTests/EZPunchPhoneTests-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "EPunchClockPhoneTests/EZPunchPhoneTests-Info.plist";
 				OTHER_LDFLAGS = (
 					"-framework",

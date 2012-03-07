@@ -18,6 +18,7 @@
 @synthesize arrayUsers;
 @synthesize usersDict;
 @synthesize managedObjectContext;
+@synthesize showWarn;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -40,6 +41,7 @@
 	[currentUser reloadAllComponents];
 	//set the state of the time rounding toggle.
 	[roundTimes setOn:[[NSUserDefaults standardUserDefaults] boolForKey:@"useRounding"] animated:NO];
+	[showWarn setOn:[[NSUserDefaults standardUserDefaults] boolForKey:@"showLocalWarning"] animated:NO];
 	
 	
 	NSInteger index=0;
@@ -68,17 +70,12 @@
 
 // Code for the Rounding slider
 - (IBAction)setRound:(id)sender{
-	if (roundTimes.isOn )
-	{
-		[[NSUserDefaults standardUserDefaults]
-		 setObject:@"YES" forKey:@"useRounding"];
-		//useRounding=CFSTR("True");
-	}
-	else
-	{
-		[[NSUserDefaults standardUserDefaults]
-		 setObject:@"NO" forKey:@"useRounding"];
-	}
+	[[NSUserDefaults standardUserDefaults]
+	 setBool:roundTimes.isOn forKey:@"useRounding"];
+}
+
+- (IBAction)setShowWarning:(id)sender{
+	[[NSUserDefaults standardUserDefaults] setBool:showWarn.isOn forKey:@"showLocalWarning"];
 }
 
 -(IBAction)setLocation:(id)sender{

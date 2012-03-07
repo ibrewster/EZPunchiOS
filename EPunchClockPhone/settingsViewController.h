@@ -23,6 +23,7 @@
 }
 
 @property (nonatomic, assign) IBOutlet UISwitch *roundTimes;
+@property (nonatomic, assign) IBOutlet UISwitch *showWarn;
 @property (nonatomic, assign) IBOutlet UITextField *curLocation;
 @property (nonatomic, retain) NSDictionary *usersDict;
 @property (nonatomic, retain) NSMutableArray *arrayUsers;
@@ -30,6 +31,7 @@
 @property (nonatomic, assign) NSManagedObjectContext *managedObjectContext;
 
 - (IBAction)setRound:(id)sender;
+- (IBAction)setShowWarning:(id)sender;
 - (IBAction)setLocation:(id)sender;
 
 @end

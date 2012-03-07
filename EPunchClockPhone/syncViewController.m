@@ -9,6 +9,7 @@
 #import "syncViewController.h"
 #import "punches.h"
 #import "unistd.h"
+#include <arpa/inet.h>
 #define kAppIdentifier		@"EPunchClock"
 
 @interface NSNetService (syncViewControllerAdditions)
@@ -77,20 +78,20 @@
     if ( keyboardShown )
         return;
 	
-        NSDictionary *info = [aNotification userInfo];
-        NSValue *aValue = [info objectForKey:UIKeyboardFrameBeginUserInfoKey];
-        CGSize keyboardSize = [aValue CGRectValue].size;
-		
-        NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        CGRect frame = self.view.frame;
-        frame.origin.y -= keyboardSize.height-44;
-        frame.size.height += keyboardSize.height-44;
-        [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-        [UIView setAnimationDuration:animationDuration];
-        self.view.frame = frame;
-        [UIView commitAnimations];
-		
-        viewMoved = YES;
+	NSDictionary *info = [aNotification userInfo];
+	NSValue *aValue = [info objectForKey:UIKeyboardFrameBeginUserInfoKey];
+	CGSize keyboardSize = [aValue CGRectValue].size;
+	
+	NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	CGRect frame = self.view.frame;
+	frame.origin.y -= keyboardSize.height-44;
+	frame.size.height += keyboardSize.height-44;
+	[UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+	[UIView setAnimationDuration:animationDuration];
+	self.view.frame = frame;
+	[UIView commitAnimations];
+	
+	viewMoved = YES;
 	
     keyboardShown = YES;
 }
@@ -138,7 +139,7 @@
 						[[NSUserDefaults standardUserDefaults] stringForKey:@"LastSync"]]];
 	[manualHost setText:[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualHost"]];
 	[manualPort setText:[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualPort"]];
-
+	
     //	syncLabel.textColor = [UIColor colorWithRed: 76/255.0 green: 86/255.0 blue: 108/255.0 alpha:1.0];
     //	syncLabel.font=[UIFont boldSystemFontOfSize:17];
     //	syncLabel.shadowColor=[UIColor whiteColor];
@@ -162,18 +163,6 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
-}
-- (void) setupNetwork {
-	
-	[_inStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[_inStream release];
-	_inStream = nil;
-	_inReady = NO;
-	
-	[_outStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[_outStream release];
-	_outStream = nil;
-	_outReady = NO;
 }
 
 // If necessary, sets up state to show an activity indicator to let the user know that a resolve is occuring.
@@ -505,140 +494,69 @@
 - (void) didResolveInstance:(NSNetService *)netService
 {
 	if (!netService) {
-		[self setupNetwork];
+		[utils.communicator closeConnection];
 		return;
 	}
 	
-    // note the following method returns _inStream and _outStream with a retain count that the caller must eventually release
-	if (![netService getInputStream:&_inStream outputStream:&_outStream]) {
-		[self _showAlert:@"Failed connecting to server"];
+	
+	struct sockaddr_in  *socketAddress = nil;
+	NSString            *ipString = nil;
+	unsigned short int   port;
+	BOOL				connected=NO;
+	
+	//make sure any old conenctions are closed
+	[utils.communicator closeConnection];
+	
+	//try each address until one works (hopefully)
+	for (NSData *data in [netService addresses]) {
+		char addressBuffer[100];
+		socketAddress=(struct sockaddr_in *)[data bytes];
+		int sockFamily = socketAddress->sin_family;
+		if (sockFamily == AF_INET || sockFamily == AF_INET6) {
+			ipString=[NSString stringWithFormat:@"%s",inet_ntop(sockFamily,&(socketAddress->sin_addr),addressBuffer,sizeof(addressBuffer))];
+			port=ntohs(socketAddress->sin_port);
+			
+			[utils.communicator initalizeConnectionForServer:ipString WithPort:port];
+			NSLog(@"Server: %@ Port:%i",ipString,port);
+			
+			if ([self openStreams]) {
+				connected=YES;
+				break;
+			}
+		}
+	}
+	if(!connected)
+	{
+		[self _showAlert:@"Unable to connect- no valid address"];
 		return;
 	}
+	else {
+		[[NSUserDefaults standardUserDefaults] setValue:ipString forKey:@"ManualHost"];
+		[[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i",port] forKey:@"ManualPort"];
+	}
 	
-	[self openStreams];
 	[self requestUsers];
 	[self requestLogin];
-	[self sendPunches];
+	[utils.communicator sendPunchesFromContext:managedObjectContext];
 }
 
-- (void) openStreams
+- (BOOL) openStreams
 {
-	_inStream.delegate = self;
-	[_inStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[_inStream open];
-	//NSLog(@"Input Stream Status: %i",[_inStream streamStatus]);
-	_outStream.delegate = self;
-	[_outStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[_outStream open];
-	//NSLog(@"Output Stream Status: %i",[_outStream streamStatus]);
-
-}
-
-- (BOOL) send:(NSData *)message
-{
-	unsigned short int waitCount=0; //counter for timeout to avoid infinite loop
-	while(!(_outStream && [_outStream hasSpaceAvailable]) && waitCount<15)
+	if([utils.communicator initalized])
 	{
-		if ([_inStream streamStatus]==7 || [_outStream streamStatus]==7) {
-			//stream error - no sense in waiting
-			[self _showAlert:@"Communications Error"];
-			NSLog(@"Input Stream Status: %i",[_inStream streamStatus]);
-			NSLog(@"Output Stream Status: %i",[_outStream streamStatus]);
-			NSLog(@"Input Stream Error Code: %i, userInfo: %@",[[_inStream streamError] code],[[_inStream streamError] userInfo]);
-			NSLog(@"Output Stream Error Code: %i, userInfo: %@",[[_outStream streamError] code],[[_outStream streamError]userInfo]);
-			return NO;
-		}
-		sleep(1);
-		waitCount++;
-	}
-	if(waitCount<15)
-	{
-		if (_outStream) //&& [_outStream hasSpaceAvailable])
-			if([_outStream write:(const uint8_t *)[message bytes] maxLength:[message length]] == -1)
-			{
-				[self _showAlert:@"Failed sending data to peer"];
-				return NO;
-			}
-			else
-				return YES;
-		else
-			return NO;
-	}
-	else
-	{
-		[self _showAlert:@"Timeout waiting to send data."];
-		NSLog(@"Input Stream Status: %i",[_inStream streamStatus]);
-		NSLog(@"Output Stream Status: %i",[_outStream streamStatus]);
-		NSLog(@"Input Stream Error Code: %i, userInfo: %@",[[_inStream streamError] code],[[_inStream streamError] userInfo]);
-		NSLog(@"Output Stream Error Code: %i, userInfo: %@",[[_outStream streamError] code],[[_outStream streamError]userInfo]);
-		return NO;
-	}
-	return NO; //should never get here
-}
-
-- (void) sendPunches{
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	NSEntityDescription *entity = [NSEntityDescription entityForName:@"punches" inManagedObjectContext:managedObjectContext];
-	[request setEntity:entity];
-	NSSortDescriptor *dateColumn = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
-	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:dateColumn, nil];
-	[request setSortDescriptors:sortDescriptors];
-	[sortDescriptors release];
-	[dateColumn release];
-	
-	NSError *error;
-	NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
-	punches *punch;
-	if (fetchResults == nil) {
-        // Handle the error.
-	}
-	//NSMutableString *data=[NSMutableString stringWithCapacity:20];
-	
-    //submit each punch to the server
-	for (int i=0; i<[fetchResults count]; i++) {
-//		[data setString:@"NewPunch\n"];
-		punch=[fetchResults objectAtIndex:i];
-        NSData *punchData=encodePunchForSending(punch.user, punch.punchtype, 
-                                                punch.punchdate, punch.punchtime, 
-                                                punch.notes);
-//		[data appendFormat:@"%@\n",punch.user];
-//		[data appendFormat:@"%@\n",punch.punchtype];
-//		[data appendFormat:@"%@T%@\n",punch.punchdate,punch.punchtime];
-//		
-//		if(punch.notes==nil)
-//			punch.notes=@"";
-//		[data appendFormat:@"%@\n",punch.notes];
-//		NSString *location=[[NSUserDefaults standardUserDefaults] stringForKey:@"location"];
-//		if (location==nil) {
-//			location=@"iPhone";
-//		}
-//		[data appendFormat:@"%@|",location];
-		[[utils communicator] sendDataWithData:punchData];
-		//[self send:punchData];
+		[utils.communicator setStreamDelegates:self];
+		return [utils.communicator openConnection];
 	}
 	
-    //clear the punch database
-	for (NSManagedObject *managedObject in fetchResults) {
-        [managedObjectContext deleteObject:managedObject];
-        //NSLog(@"%@ object deleted",@"punches");
-    }
-    if (![managedObjectContext save:&error]) {
-        NSLog(@"Error deleting %@ - error:%@",@"punches",[error userInfo]);
-    }
-	
-	[request release];
-	
-}
-
-- (void) updateLogin:(NSArray *)loginData
-{
-	
+	return NO; //if we get here, then the communicator has not been initalized,
+			   //therfore we did not open the streams.
 }
 
 - (void)requestLogin
 {
 	NSString *request=@"GetLogin|";
-	[self send:[request dataUsingEncoding: NSASCIIStringEncoding]];
+	//[self send:[request dataUsingEncoding: NSASCIIStringEncoding]];
+	[utils.communicator sendDataWithData:[request dataUsingEncoding: NSASCIIStringEncoding]];
 }
 
 - (BOOL)requestUsers
@@ -655,7 +573,8 @@
 	}
 	
 	NSString *request=@"GetUserList|";
-	return [self send:[request dataUsingEncoding: NSASCIIStringEncoding]];
+	//return [self send:[request dataUsingEncoding: NSASCIIStringEncoding]];
+	return [utils.communicator sendDataWithData:[request dataUsingEncoding: NSASCIIStringEncoding]];
 }
 
 - (void) _showAlert:(NSString *)title
@@ -678,29 +597,22 @@
 	//save host and port for next run
 	[[NSUserDefaults standardUserDefaults] setValue:serverHost forKey:@"ManualHost"];
 	[[NSUserDefaults standardUserDefaults] setValue:[NSString stringWithFormat:@"%i",serverPort] forKey:@"ManualPort"];
-
+	
 	
 	[manualHost resignFirstResponder];
 	[manualPort resignFirstResponder];
-	CFReadStreamRef readStream;
-	CFWriteStreamRef writeStream;
-	CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)serverHost, serverPort, &readStream, &writeStream);
 	
-	if(!readStream || !writeStream)
-	{
-		[self _showAlert:@"Failed connecting to server"];
+	[utils.communicator initalizeConnectionForServer:serverHost WithPort:serverPort];
+	
+	if (![self openStreams]) {
+		[self _showAlert:@"Unable to connect"];
 		return;
 	}
-	
-	_inStream=(NSInputStream *)readStream;
-	_outStream=(NSOutputStream *)writeStream;
-	
-	[self openStreams];
 	if (![self requestUsers]) {
 		return;
 	}
 	[self requestLogin];
-	[self sendPunches];
+	[utils.communicator sendPunchesFromContext:managedObjectContext];
 }
 
 #pragma mark -
@@ -738,7 +650,8 @@
 	for (i = 0; i < count; i++) {
 		NSString * user = [arrayUsers objectAtIndex:i];
 		NSString * requestString=[NSString stringWithFormat:@"GetPunchType\n%@|",user];
-		[self send:[requestString dataUsingEncoding:NSASCIIStringEncoding]];
+		[utils.communicator sendDataWithData:[requestString dataUsingEncoding:NSASCIIStringEncoding]];
+		//[self send:[requestString dataUsingEncoding:NSASCIIStringEncoding]];
 	}
 }
 
@@ -783,23 +696,11 @@
 	[[NSUserDefaults standardUserDefaults] setObject:usersDict forKey:@"users"]; //save users to settings file
 	[[NSUserDefaults standardUserDefaults] setObject:passwordsDict forKey:@"passwords"];
 	
-	//[navigationController popViewControllerAnimated:YES]; //leave the sync window
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Sync Complete" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Continue", nil]; //display a complete message
 	[alertView show];
 	[alertView release];
 	
-	//disconnect from the server (I think)
-	[_inStream removeFromRunLoop:[NSRunLoop currentRunLoop] 
-						 forMode:NSDefaultRunLoopMode];
-	[_inStream release];
-	_inStream = nil;
-	_inReady = NO;
-	
-	[_outStream removeFromRunLoop:[NSRunLoop currentRunLoop] 
-						  forMode:NSDefaultRunLoopMode];
-	[_outStream release];
-	_outStream = nil;
-	_outReady = NO;
+	[utils.communicator closeConnection];
 }
 
 - (void) processDataWithData:(NSData *)data {
@@ -809,7 +710,7 @@
 	dataString=[dataString stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
 	
 	//NSLog(@"Data Recieved: %@",dataString);
-
+	
 	NSArray *commands=[dataString componentsSeparatedByString:@"|"];
 	NSUInteger i, count = [commands count];
 	for (i = 0; i < count; i++) {
@@ -840,38 +741,29 @@
 - (void) stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode
 {
 	switch(eventCode) {
-		case NSStreamEventOpenCompleted:
-		{
-			if (stream == _inStream)
-				_inReady = YES;
-			else
-				_outReady = YES;
-			break;
-		}
 		case NSStreamEventHasBytesAvailable:
 		{
-			if (stream == _inStream) {
-				char b[255]="\0";
-				NSMutableData *data=[NSMutableData dataWithCapacity:0];
-				unsigned int len = 0;
-				while([_inStream hasBytesAvailable])
-				{
-					len = [_inStream read:(unsigned char *)b maxLength:254];
-					
-					if(!len) {
-						if ([stream streamStatus] != NSStreamStatusAtEnd)
-							[self _showAlert:@"Failed reading data from peer"];
-						else 
-							return;
-					} else {
-                        //data recieved, append to data object
-						b[len]='\0'; //make sure we have a terminating null
-						[data appendBytes:b length:len];
-					}
+			char b[255]="\0";
+			NSMutableData *data=[NSMutableData dataWithCapacity:0];
+			unsigned int len = 0;
+			while([(NSInputStream *)stream hasBytesAvailable])
+			{
+				len = [(NSInputStream *)stream read:(unsigned char *)b maxLength:254];
+				
+				if(!len) {
+					if ([stream streamStatus] != NSStreamStatusAtEnd)
+						[self _showAlert:@"Failed reading data from peer"];
+					else 
+						return;
+				} else {
+					//data recieved, append to data object
+					b[len]='\0'; //make sure we have a terminating null
+					[data appendBytes:b length:len];
 				}
-                //extract data
-				[self processDataWithData:data];
 			}
+			//extract data
+			[self processDataWithData:data];
+			//}
 			break;
 		}
 		case NSStreamEventErrorOccurred:
@@ -884,20 +776,9 @@
 		case NSStreamEventEndEncountered:
 		{
 			UIAlertView	*alertView;
-			alertView = [[UIAlertView alloc] initWithTitle:@"Sync Completed!" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"Continue", nil];
+			alertView = [[UIAlertView alloc] initWithTitle:@"Transfer Interupted" message:@"Remote host closed connection" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Continue", nil];
 			[alertView show];
 			[alertView release];
-			
-			[_inStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-			[_inStream release];
-			_inStream = nil;
-			_inReady = NO;
-			
-			[_outStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-			[_outStream release];
-			_outStream = nil;
-			_outReady = NO;
-			
 			break;
 		}
 	}

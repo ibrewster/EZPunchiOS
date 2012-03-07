@@ -12,10 +12,17 @@
 
 @property (nonatomic, retain) NSInputStream * inStream;
 @property (nonatomic, retain) NSOutputStream * outStream;
+@property (nonatomic) BOOL initalized;
+@property (nonatomic, retain) NSString *serverAddr;
+@property (nonatomic) int serverPort;
 
 -(void) initalizeConnectionForServer:(NSString *)server WithPort:(int)port;
 -(BOOL) connectToServer:(NSString *)server WithPort:(int)port;
 -(BOOL) openConnection;
 -(void) closeConnection;
+-(void) setStreamDelegates:(id)delegate;
 -(BOOL) sendDataWithData:(NSData *)data;
+-(void) showAlert:(NSString *)alertData;
+- (void) sendPunchesFromContext:(NSManagedObjectContext *)context;
+
 @end
