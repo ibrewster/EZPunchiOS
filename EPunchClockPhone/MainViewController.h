@@ -43,11 +43,18 @@
 - (IBAction)startRepeatingTimer:(id)sender;
 - (IBAction)stopRepeatingTimer:(id)sender;
 - (IBAction)setTime:(id)sender;
-- (IBAction)recordPunch:(id)sender;
+- (IBAction)punchButtonPressed:(id)sender;
+- (void) finalizePunch:(NSNotification *)notification;
+- (void) recordNetworkPunch:(NSNotification *)notificication;
+- (void) recordNetworkPunchStageTwo:(NSNotification *)notification;
+- (void) recordLocalPunch:(NSNotification *)notificication;
 //- (IBAction)showInfo;
 - (IBAction)updatePunchType;
-- (BOOL)storeLocalPunch;
+- (void)recievePunchType:(NSNotification *)notification;
 - (void)setUtilsWithUtils:(Utilities *)newUtils;
+- (void) requestPunchType:(NSNotification *)notificiation;
+- (void) checkForLocalPunches;
+- (void) runViewLoadChecks:(NSNotification *) notification;
 
 @end
 

@@ -9,7 +9,7 @@
 #import "EZCommunicator.h"
 #import "punches.h"
 #import "Utilities.h"
-
+#import "Reachability.h"
 
 @implementation EZCommunicator
 
@@ -18,6 +18,10 @@
 @synthesize initalized;
 @synthesize serverAddr;
 @synthesize serverPort;
+@synthesize recievedData;
+@synthesize checkOutStream;
+@synthesize checkInStream;
+@synthesize checkTimer;
 
 -(id)init
 {
@@ -54,6 +58,8 @@
     
     [self setInStream:(NSInputStream *)readStream];
     [self setOutStream:(NSOutputStream *)writeStream];
+	[inStream setDelegate:self];
+	[outStream setDelegate:self];
 	[self setInitalized:YES];
 }
 
@@ -92,8 +98,8 @@
 
 -(void)setStreamDelegates:(id)delegate
 {
-	[inStream setDelegate:delegate];
-	[outStream setDelegate:delegate];
+//	[inStream setDelegate:delegate];
+//	[outStream setDelegate:delegate];
 }
 
 -(BOOL) connectToServer:(NSString *)server WithPort:(int)port
@@ -190,11 +196,155 @@
 	
 }
 
+- (void) stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode
+{
+	switch(eventCode) {
+		case NSStreamEventHasBytesAvailable:
+		{
+			unsigned char b[255]="\0";
+			NSMutableData *data=[NSMutableData dataWithCapacity:0];
+			unsigned int len = 0;
+			while([(NSInputStream *)stream hasBytesAvailable])
+			{
+				len = [(NSInputStream *)stream read:b maxLength:254];
+				
+				if(!len) {
+					if ([stream streamStatus] != NSStreamStatusAtEnd)
+						[self showAlert:@"Failed reading data from peer"];
+					else 
+						return;
+				} else {
+					//data recieved, append to data object
+					b[len]='\0'; //make sure we have a terminating null
+					[data appendBytes:b length:len];
+				}
+			}
+			//[self.recievedData appendData:data];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPDataRecieved" 
+																object:self
+															  userInfo:[NSDictionary dictionaryWithObject:data forKey:@"data"]];
+			break;
+		}
+		case NSStreamEventErrorOccurred:
+		{
+			//NSLog(@"%@", _cmd);
+			//[self showAlert:@"Error encountered on stream!"];
+			if (stream==checkOutStream) {
+				[checkTimer invalidate];
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPServerUnreachable" 
+																	object:self
+																  userInfo:nil];
+			}
+			break;
+		}
+			
+		case NSStreamEventEndEncountered:
+		{
+			UIAlertView	*alertView;
+			alertView = [[UIAlertView alloc] initWithTitle:@"Transfer Interupted" message:@"Remote host closed connection" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Continue", nil];
+			[alertView show];
+			[alertView release];
+			break;
+		}
+		case NSStreamEventOpenCompleted:
+		{
+			if(stream==checkOutStream)
+			{
+				//only send one notification for the in/out pair
+				//I arbitrarily chose to do it for the output stream
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPServerReachable" 
+																	object:self
+																  userInfo:nil];
+				[checkOutStream close];
+				[checkOutStream release];
+				[checkTimer invalidate];
+			}
+			if(stream==checkInStream)
+			{
+				[checkInStream close];
+				[checkInStream release];
+			}
+		}
+	}
+}
+
+-(NSData *)read
+{
+	NSData *data=[NSData dataWithData:recievedData];
+	[self.recievedData setLength:0];
+	return data;
+}
+
 -(void) showAlert:(NSString *)alertData
 {
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:alertData message:@"Check your networking configuration." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alertView show];
 	[alertView release];
 
+}
+
+-(void) checkNetwork
+{
+    NSString *hostname=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualHost"];
+	
+	Reachability *hostReachable=[Reachability reachabilityWithHostName:hostname];
+    NetworkStatus status=[hostReachable currentReachabilityStatus];
+	if (status==NotReachable) { //no network/wrong network. stop trying immediately.
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPServerUnreachable" 
+															object:self
+														  userInfo:nil];
+		return;
+	}
+
+	
+    NSString *portString=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualPort"];
+    if(hostname==nil || portString==nil)
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPServerUnreachable" 
+															object:self
+														  userInfo:nil];
+		return;
+	}
+    int port=[portString intValue];
+    CFReadStreamRef readStream;
+	CFWriteStreamRef writeStream;
+	CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)hostname, port, &readStream, &writeStream);
+	
+	if(!readStream || !writeStream)
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPServerUnreachable" 
+															object:self
+														  userInfo:nil];
+		return;
+	}
+	
+	//just try the write stream - we only care if we can reach the server, we're not
+	//trying to actually DO anything.
+    [self setCheckOutStream:(NSOutputStream *)writeStream];
+	[self setCheckInStream:(NSInputStream *)readStream];
+	[checkOutStream setDelegate:self];
+	[checkInStream setDelegate:self];
+    [checkOutStream open];
+	[checkInStream open];
+	[checkOutStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+	[checkInStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+	
+	//set a two second timeout on trying to connect so the program doesn't hang
+	checkTimer= [NSTimer scheduledTimerWithTimeInterval:2.0
+												  target:self selector:@selector(checkTimeout:)
+												userInfo:nil repeats:NO];
+
+}
+
+ -(IBAction)checkTimeout:(id)sender
+{
+	[checkInStream close];
+	[checkOutStream close];
+	[checkInStream release];
+	[checkOutStream release];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"EZPServerUnreachable" 
+														object:self
+													  userInfo:nil];
+	[checkTimer invalidate];
 }
 @end

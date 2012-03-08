@@ -87,6 +87,7 @@ NSStreamDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 - (void) requestLogin;
 - (BOOL) requestUsers;
 - (void) processDataWithData:(NSData *)data;
+- (void) processData:(NSNotification *)notification;
 - (void) updateUsers:(NSArray *)newUsers;
 - (void) updatePunches:(NSArray *)punchInfo;
 - (void) finishSync;

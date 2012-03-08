@@ -79,100 +79,33 @@
 	
 }
 
-- (IBAction)recordPunch:(id)sender{
-	BOOL canSeeServer=checkNetwork();
-	BOOL punchStored=NO;
-	NSDateFormatter *dateFormatter =[[[NSDateFormatter alloc] init] autorelease];
-	[dateFormatter setDateFormat:@"YYYY-MM-dd"];
-	NSString *punchDate=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
-	
-	[dateFormatter setDateFormat:@"HH:mm:ss"];
-	NSString *punchTime=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
-	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
-	NSString *notes=textField.text;
-	
-	textField.text=nil;
-	
-    if (!canSeeServer || ![utils.communicator initalized])
-    {
-		if([[NSUserDefaults standardUserDefaults] boolForKey:@"showLocalWarning"])
-		{
-			UIAlertView *errorAlert = [[UIAlertView alloc]
-									   initWithTitle: @"Server Not Reachable"
-									   message:@"Punch will be stored locally until server can be reached"
-									   delegate:nil
-									   cancelButtonTitle:@"OK"
-									   otherButtonTitles:nil];
-			
-			
-			[errorAlert show];
-			[errorAlert release];
-		}
-		punchStored=[self storeLocalPunch];
-    }
-	else {
-		NSLog(@"Sent punch of type: %@",punchtype);
-		NSData *encodedPunch=encodePunchForSending(user, punchtype, punchDate, punchTime, notes);
-		if ([utils.communicator openConnection]) {
-			punchStored=[utils.communicator sendDataWithData:encodedPunch];
-			
-			NSFetchRequest *request = [[NSFetchRequest alloc] init];
-			NSEntityDescription *entity = [NSEntityDescription entityForName:@"punches" inManagedObjectContext:managedObjectContext];
-			[request setEntity:entity];
-			NSSortDescriptor *dateColumn = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
-			NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:dateColumn, nil];
-			[request setSortDescriptors:sortDescriptors];
-			[sortDescriptors release];
-			[dateColumn release];
-			
-			NSError *error;
-			NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
+- (IBAction)punchButtonPressed:(id)sender{
+	[utils.communicator checkNetwork];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(recordNetworkPunch:) 
+												 name:@"EZPServerReachable" 
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(recordLocalPunch:) 
+												 name:@"EZPServerUnreachable" 
+											   object:nil];
+}
 
-			if ([fetchResults count]>0) {
-				UIAlertView *foundAlert = [[UIAlertView alloc]
-										   initWithTitle: @"Local punches detected"
-										   message:@"Would you like to sync all "
-										   "locally stored punches to this server now?"
-										   delegate:self
-										   cancelButtonTitle:@"NO"
-										   otherButtonTitles:@"YES", nil];
-				[foundAlert show];
-				[foundAlert release];
 
-			}
-			
-			[utils.communicator closeConnection];
-		}
-		else {
-			if([[NSUserDefaults standardUserDefaults] boolForKey:@"showLocalWarning"])
-			{
-				UIAlertView *errorAlert = [[UIAlertView alloc]
-										   initWithTitle: @"Unable to connect to server"
-										   message:@"Punch will be stored locally until server can be reached"
-										   delegate:nil
-										   cancelButtonTitle:@"OK"
-										   otherButtonTitles:nil];
-				[errorAlert show];
-				[errorAlert release];
-			}
-			punchStored=[self storeLocalPunch];
-		}
-	}
+-(void)recordLocalPunch:(NSNotification *)notificication
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self 
+													name:@"EZPServerReachable" 
+												  object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self 
+													name:@"EZPServerUnreachable" 
+												  object:nil];
 	
-	if (punchStored) {
-		NSString *punchAlert;
-		[dateFormatter setDateStyle:NSDateFormatterNoStyle];
-		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-		punchAlert=[[NSString alloc] initWithFormat:@"Your %@ punch for %@ on %@ at %@ has been recorded.\n\nNotes: %@", 
-					punchtype,user,punchDate,
-					[dateFormatter stringFromDate:currentDate],notes];
-		[punchDate release];
-		[punchTime release];
-		
-		
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"showLocalWarning"])
+	{
 		UIAlertView *errorAlert = [[UIAlertView alloc]
-								   initWithTitle: @"Punch Status"
-								   message:punchAlert
+								   initWithTitle: @"Server Not Reachable"
+								   message:@"Punch will be stored locally until server can be reached"
 								   delegate:nil
 								   cancelButtonTitle:@"OK"
 								   otherButtonTitles:nil];
@@ -180,30 +113,8 @@
 		
 		[errorAlert show];
 		[errorAlert release];
-		[punchAlert release];
-		if(punchtype==@"in")
-		{
-			punchtype=@"out";
-			[self.usersDict setObject:@"in" forKey:user];
-		}
-		else
-		{
-			punchtype=@"in";
-			[usersDict setValue:@"out" forKey:user];
-		}
-		[[NSUserDefaults standardUserDefaults] setObject:usersDict forKey:@"users"];
-		
-		NSString *buttonTitle=[[NSString alloc] initWithFormat:@"Punch %@", punchtype];
-		[punchButton setTitle:buttonTitle forState:UIControlStateNormal];
-		punchButton.titleLabel.text=buttonTitle;
-		
 	}
 	
-		//[buttonTitle release];
-}
-
--(BOOL)storeLocalPunch
-{
 	if (!self.managedObjectContext) {
 		UIAlertView *errorAlert = [[UIAlertView alloc]
 								   initWithTitle: @"Unable to record punch"
@@ -212,10 +123,9 @@
 								   cancelButtonTitle:@"OK"
 								   otherButtonTitles:nil];
 		
-		
 		[errorAlert show];
 		[errorAlert release];
-		return NO;
+		return;
 		
 	}
 	
@@ -243,11 +153,209 @@
 	NSError *error;
 	
 	if (![managedObjectContext save:&error]){
-		return NO;
+		return;
 	}
-	return YES;
+
+	[self finalizePunch:nil];
 
 }
+
+-(void)recordNetworkPunch:(NSNotification *)notificication
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self 
+													name:@"EZPServerReachable" 
+												  object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self 
+													name:@"EZPServerUnreachable" 
+												  object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(recordNetworkPunchStageTwo:) 
+												 name:@"PunchTypeUpdated" 
+											   object:nil];
+	[self checkForLocalPunches];
+	//wait untill complete
+
+
+
+}
+
+-(void) recordNetworkPunchStageTwo:(NSNotification *)notification
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self 
+													name:@"PunchTypeUpdated" 
+												  object:nil];
+	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
+	NSString * requestString=[NSString stringWithFormat:@"GetPunchType\n%@|",user];
+	if([utils.communicator openConnection])
+	{
+		[utils.communicator sendDataWithData:[requestString dataUsingEncoding:NSASCIIStringEncoding]];
+		//the next piece of data we get should be our punch, so grab it.
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finalizePunch:) name:@"EZPDataRecieved" object:nil];
+	}
+	else {
+		[self recordLocalPunch:nil];
+		[self finalizePunch:nil];
+	}
+}
+
+-(void)finalizePunch:(NSNotification *)notification
+{	
+	BOOL punchStored=NO;
+	
+	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
+	
+	NSDateFormatter *dateFormatter =[[[NSDateFormatter alloc] init] autorelease];
+	[dateFormatter setDateFormat:@"YYYY-MM-dd"];
+	NSString *punchDate=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
+	
+	[dateFormatter setDateFormat:@"HH:mm:ss"];
+	NSString *punchTime=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
+	NSString *notes=textField.text;
+	
+	textField.text=nil;
+	
+	if(notification) //store to server, but only after reciving latest punch type
+	{
+		//see if we got a punch data set
+		NSString *dataString=[NSString stringWithCString:[[[notification userInfo] objectForKey:@"data"] bytes] encoding:NSASCIIStringEncoding];
+		NSArray *commandArray=[dataString componentsSeparatedByString:@"|"];
+		NSString *commandString=nil;
+		for (NSString *command in commandArray) {
+			if ([command hasPrefix:@"PunchType"]) {
+				commandString=command;
+				break;
+			}
+		}
+		if (commandString==nil) { //we didn't get the punch data we are waiting for
+			return;
+		}
+		
+		//Now that we have what we are looking for, stop looking
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"EZPDataRecieved" object:nil];
+		
+
+		NSArray *punchInfo=[commandString componentsSeparatedByString:@"\n"];
+		NSString *SentUser=[[punchInfo objectAtIndex:2] stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]]; //the first entry is the command
+		if ([SentUser isEqualToString:user]) {
+			punchtype=[NSString stringWithString:[punchInfo objectAtIndex:1]];
+		}
+		
+		//[self updatePunchType];
+		NSData *encodedPunch=encodePunchForSending(user, punchtype, punchDate, punchTime, notes);
+		//if ([utils.communicator openConnection]) {
+		punchStored=[utils.communicator sendDataWithData:encodedPunch];
+		[utils.communicator closeConnection];
+		
+		
+//		//check for locally stored punches we can send to the server
+//		NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//		NSEntityDescription *entity = [NSEntityDescription entityForName:@"punches" inManagedObjectContext:managedObjectContext];
+//		[request setEntity:entity];
+//		NSSortDescriptor *dateColumn = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
+//		NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:dateColumn, nil];
+//		[request setSortDescriptors:sortDescriptors];
+//		[sortDescriptors release];
+//		[dateColumn release];
+//		
+//		NSError *error;
+//		NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
+//		
+//		if ([fetchResults count]>0) {
+//			UIAlertView *foundAlert = [[UIAlertView alloc]
+//									   initWithTitle: @"Local punches detected"
+//									   message:@"Would you like to sync all "
+//									   "locally stored punches to the server now?"
+//									   delegate:self
+//									   cancelButtonTitle:@"NO"
+//									   otherButtonTitles:@"YES", nil];
+//			[foundAlert show];
+//			[foundAlert release];
+//			
+//		}
+		
+		//}
+		
+	}
+	
+	//if (punchStored) {
+	NSString *punchAlert;
+	[dateFormatter setDateStyle:NSDateFormatterNoStyle];
+	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	punchAlert=[[NSString alloc] initWithFormat:@"Your %@ punch for %@ on %@ at %@ has been recorded.\n\nNotes: %@", 
+				punchtype,user,punchDate,
+				[dateFormatter stringFromDate:currentDate],notes];
+	[punchDate release];
+	[punchTime release];
+	
+	
+	UIAlertView *errorAlert = [[UIAlertView alloc]
+							   initWithTitle: @"Punch Status"
+							   message:punchAlert
+							   delegate:nil
+							   cancelButtonTitle:@"OK"
+							   otherButtonTitles:nil];
+	
+	
+	[errorAlert show];
+	[errorAlert release];
+	[punchAlert release];
+	if([punchtype isEqualToString:@"in"])
+	{
+		punchtype=@"out";
+		[self.usersDict setValue:@"in" forKey:user];
+	}
+	else
+	{
+		punchtype=@"in";
+		[usersDict setValue:@"out" forKey:user];
+	}
+	[[NSUserDefaults standardUserDefaults] setObject:usersDict forKey:@"users"];
+	
+	NSString *buttonTitle=[[NSString alloc] initWithFormat:@"Punch %@", punchtype];
+	[punchButton setTitle:buttonTitle forState:UIControlStateNormal];
+	punchButton.titleLabel.text=buttonTitle;
+	
+	//}
+	
+	//[buttonTitle release];
+	
+}
+
+- (void) checkForLocalPunches
+{
+	//check for locally stored punches we can send to the server
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"punches" inManagedObjectContext:managedObjectContext];
+	[request setEntity:entity];
+	NSSortDescriptor *dateColumn = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:YES];
+	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:dateColumn, nil];
+	[request setSortDescriptors:sortDescriptors];
+	[sortDescriptors release];
+	[dateColumn release];
+	
+	NSError *error;
+	NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
+	
+	if ([fetchResults count]>0) {
+		UIAlertView *foundAlert = [[UIAlertView alloc]
+								   initWithTitle: @"Local punches detected"
+								   message:@"Would you like to sync all "
+								   "locally stored punches to the server now?"
+								   delegate:self
+								   cancelButtonTitle:@"NO"
+								   otherButtonTitles:@"YES", nil];
+		[foundAlert show];
+		[foundAlert release];
+		
+	}
+	else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"PunchTypeUpdated" 
+															object:self
+														  userInfo:nil];
+	}
+
+}
+
 
 - (IBAction)setTime:(id)sender {
 	//get current date
@@ -326,17 +434,47 @@
         [alertView release];
     }	
 	
+	
 	[self updatePunchType];
-    NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
+	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
     if (!user) {
         user=@"None";
     }
+	else {
+		//check for updated punch type. Don't bother if there is no user
+		[utils.communicator checkNetwork];
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(runViewLoadChecks:) 
+													 name:@"EZPServerReachable" 
+												   object:nil];
+	}
+
 	self.userLabel.text=[[NSString alloc] initWithFormat:@"Current user: %@",user];
 	useTimeRounding=[[NSUserDefaults standardUserDefaults] boolForKey:@"useRounding"];
 	
 }
 
+-(void) runViewLoadChecks:(NSNotification *)notification
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self 
+													name:@"EZPServerReachable" 
+												  object:nil];
+	[self checkForLocalPunches];
+}
 
+-(void) requestPunchType:(NSNotification *)notificiation
+{
+
+	if([utils.communicator initalized] && [utils.communicator openConnection])
+	{
+		NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
+		NSString * requestString=[NSString stringWithFormat:@"GetPunchType\n%@|",user];
+		
+		[utils.communicator sendDataWithData:[requestString dataUsingEncoding:NSASCIIStringEncoding]];
+		//the next piece of data we get should be our punch, so grab it.
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recievePunchType:) name:@"EZPDataRecieved" object:nil];
+	}
+}
 
 
  // Override to allow orientations other than the default portrait orientation.
@@ -402,6 +540,53 @@
     }
 }
 
+-(void) recievePunchType:(NSNotification *)notification
+{
+	//see if we got a punch data set
+	NSString *user=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
+    if (!user) {
+        return; //we don't have a user selected, so don't do anything
+    }
+	NSString *dataString=[NSString stringWithCString:[[[notification userInfo] objectForKey:@"data"] bytes] encoding:NSASCIIStringEncoding];
+	NSArray *commandArray=[dataString componentsSeparatedByString:@"|"];
+	NSString *commandString=nil;
+	for (NSString *command in commandArray) {
+		if ([command hasPrefix:@"PunchType"]) {
+			commandString=command;
+			break;
+		}
+	}
+	if (commandString==nil) { //we didn't get the punch data we are waiting for
+		return;
+	}
+	
+	//Now that we have what we are looking for, stop looking and close the connection
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"EZPDataRecieved" object:nil];
+	[utils.communicator closeConnection];
+	
+	
+	NSArray *punchInfo=[commandString componentsSeparatedByString:@"\n"];
+	NSString *SentUser=[[punchInfo objectAtIndex:2] stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]]; //the first entry is the command
+	if ([SentUser isEqualToString:user]) {
+		punchtype=[NSString stringWithString:[punchInfo objectAtIndex:1]];
+		if([punchtype isEqualToString:@"in"])
+		{
+			[self.usersDict setValue:@"out" forKey:user];
+		}
+		else
+		{
+			[usersDict setValue:@"in" forKey:user];
+		}
+		[[NSUserDefaults standardUserDefaults] setObject:usersDict forKey:@"users"]; //save users to settings file
+		[self updatePunchType];
+		
+	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"PunchTypeUpdated" 
+														object:self
+													  userInfo:nil];
+	
+}
+
 #pragma mark -
 
 - (void)dealloc {
@@ -422,14 +607,20 @@
 		[utils.communicator sendPunchesFromContext:managedObjectContext];
 		[utils.communicator closeConnection];
 		UIAlertView *completeMessage = [[UIAlertView alloc]
-								   initWithTitle: @"Sync Complete"
-								   message:nil
-								   delegate:nil
-								   cancelButtonTitle:@"OK"
-								   otherButtonTitles:nil];
+										initWithTitle: @"Sync Complete"
+										message:nil
+										delegate:nil
+										cancelButtonTitle:@"OK"
+										otherButtonTitles:nil];
 		[completeMessage show];
 		[completeMessage release];
 	}
+	else {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"PunchTypeUpdated" 
+															object:self
+														  userInfo:nil];
+	}
+	[self requestPunchType:nil];
 }
 
 

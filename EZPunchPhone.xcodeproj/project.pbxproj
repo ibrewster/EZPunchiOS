@@ -39,6 +39,8 @@
 		580C5CB9136619E70076A62E /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CB8136619E70076A62E /* gear.png */; };
 		580C5CBD136622040076A62E /* punchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580C5CBB136622040076A62E /* punchViewController.m */; };
 		580C5CBE136622040076A62E /* punchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CBC136622040076A62E /* punchView.xib */; };
+		585C1B2215093E0C00A2556E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 585C1B2115093E0C00A2556E /* Reachability.m */; };
+		585C1B2415093F3100A2556E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585C1B2315093F3100A2556E /* SystemConfiguration.framework */; };
 		588E7C8614BB9DE8002A1980 /* loginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588E7C8414BB9DE7002A1980 /* loginViewController.m */; };
 		588E7C8714BB9DE8002A1980 /* loginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 588E7C8514BB9DE7002A1980 /* loginViewController.xib */; };
 		58EA48E2137C630D0006CE20 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58EA48E0137C630D0006CE20 /* MainWindow-iPad.xib */; };
@@ -103,6 +105,9 @@
 		580C5CBA136622040076A62E /* punchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = punchViewController.h; sourceTree = "<group>"; };
 		580C5CBB136622040076A62E /* punchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = punchViewController.m; sourceTree = "<group>"; };
 		580C5CBC136622040076A62E /* punchView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = punchView.xib; sourceTree = "<group>"; };
+		585C1B2015093E0C00A2556E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		585C1B2115093E0C00A2556E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		585C1B2315093F3100A2556E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		588E7C8314BB9DE7002A1980 /* loginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loginViewController.h; sourceTree = "<group>"; };
 		588E7C8414BB9DE7002A1980 /* loginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = loginViewController.m; sourceTree = "<group>"; };
 		588E7C8514BB9DE7002A1980 /* loginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = loginViewController.xib; sourceTree = "<group>"; };
@@ -120,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				585C1B2415093F3100A2556E /* SystemConfiguration.framework in Frameworks */,
 				18DBDF0013632BA000DEF563 /* UIKit.framework in Frameworks */,
 				18DBDF0213632BA000DEF563 /* Foundation.framework in Frameworks */,
 				18DBDF0413632BA000DEF563 /* CoreGraphics.framework in Frameworks */,
@@ -143,6 +149,7 @@
 		18DBDEF013632BA000DEF563 = {
 			isa = PBXGroup;
 			children = (
+				585C1B2315093F3100A2556E /* SystemConfiguration.framework */,
 				58EA48DF137C63080006CE20 /* iPad */,
 				18DBDF0513632BA000DEF563 /* EZPunchPhone */,
 				18DBDF2B13632BA100DEF563 /* EPunchClockPhoneTests */,
@@ -174,6 +181,8 @@
 		18DBDF0513632BA000DEF563 /* EZPunchPhone */ = {
 			isa = PBXGroup;
 			children = (
+				585C1B2015093E0C00A2556E /* Reachability.h */,
+				585C1B2115093E0C00A2556E /* Reachability.m */,
 				58F8EB4E1365D90D0014F134 /* Utilities.m */,
 				58F8EB4D1365D90D0014F134 /* Utilities.h */,
 				18DBDF571363318400DEF563 /* punches.h */,
@@ -391,6 +400,7 @@
 				58EA48E6137C63500006CE20 /* HomeView.m in Sources */,
 				588E7C8614BB9DE8002A1980 /* loginViewController.m in Sources */,
 				18AD2ADF15044EDE000E9DAD /* EZCommunicator.m in Sources */,
+				585C1B2215093E0C00A2556E /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

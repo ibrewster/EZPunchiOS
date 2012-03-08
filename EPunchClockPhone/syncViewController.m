@@ -128,7 +128,10 @@
 											 selector:@selector(keyboardWasHidden:)
 												 name:UIKeyboardDidHideNotification
 											   object:nil];
-	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(processData:) 
+												 name:@"EZPDataRecieved" 
+											   object:utils.communicator];
 	
 	[self.view setBackgroundColor:[self.tableView backgroundColor]];
     _services = [[NSMutableArray alloc] init];
@@ -544,10 +547,10 @@
 {
 	if([utils.communicator initalized])
 	{
-		[utils.communicator setStreamDelegates:self];
+		//[utils.communicator setStreamDelegates:self];
 		return [utils.communicator openConnection];
 	}
-	
+	//else, but don't use else to avoid compiler warning.
 	return NO; //if we get here, then the communicator has not been initalized,
 			   //therfore we did not open the streams.
 }
@@ -733,55 +736,87 @@
 		}
 	}
 }
+
+- (void) processData:(NSNotification *)notification {
+	NSData * data=[[notification userInfo] objectForKey:@"data"];
+	NSString *dataString=[NSString stringWithCString:[data bytes] encoding:NSASCIIStringEncoding];
+	
+	//trim any non-printing/non-alphanumeric characters from the ends
+	dataString=[dataString stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
+	
+	//NSLog(@"Data Recieved: %@",dataString);
+	
+	NSArray *commands=[dataString componentsSeparatedByString:@"|"];
+	NSUInteger i, count = [commands count];
+	for (i = 0; i < count; i++) {
+		NSString * command = [commands objectAtIndex:i];
+		if ([command hasPrefix:@"users"]) {
+			NSMutableArray *recData=[NSMutableArray arrayWithArray:[command componentsSeparatedByString:@"\n"]];
+			[recData removeObjectAtIndex:0];
+			[self updateUsers:recData];
+		}
+		else if ([command hasPrefix:@"PunchType"]) {
+			NSMutableArray *recData=[NSMutableArray arrayWithArray:[command componentsSeparatedByString:@"\n"]];
+			[recData removeObjectAtIndex:0];
+			[self updatePunches:recData];
+		}
+		else if ([command hasPrefix:@"LoginInfo"]) {
+			NSMutableArray *recData=[NSMutableArray arrayWithArray:[command componentsSeparatedByString:@"\n"]];
+			[recData removeObjectAtIndex:0];
+			NSString *loginValue=[recData objectAtIndex:0];
+			[[NSUserDefaults standardUserDefaults] setValue:loginValue forKey:@"login"];
+		}
+	}
+}
 @end
 
 
 @implementation syncViewController (NSStreamDelegate)
 
-- (void) stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode
-{
-	switch(eventCode) {
-		case NSStreamEventHasBytesAvailable:
-		{
-			char b[255]="\0";
-			NSMutableData *data=[NSMutableData dataWithCapacity:0];
-			unsigned int len = 0;
-			while([(NSInputStream *)stream hasBytesAvailable])
-			{
-				len = [(NSInputStream *)stream read:(unsigned char *)b maxLength:254];
-				
-				if(!len) {
-					if ([stream streamStatus] != NSStreamStatusAtEnd)
-						[self _showAlert:@"Failed reading data from peer"];
-					else 
-						return;
-				} else {
-					//data recieved, append to data object
-					b[len]='\0'; //make sure we have a terminating null
-					[data appendBytes:b length:len];
-				}
-			}
-			//extract data
-			[self processDataWithData:data];
-			//}
-			break;
-		}
-		case NSStreamEventErrorOccurred:
-		{
-			//NSLog(@"%@", _cmd);
-			[self _showAlert:@"Error encountered on stream!"];			
-			break;
-		}
-			
-		case NSStreamEventEndEncountered:
-		{
-			UIAlertView	*alertView;
-			alertView = [[UIAlertView alloc] initWithTitle:@"Transfer Interupted" message:@"Remote host closed connection" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Continue", nil];
-			[alertView show];
-			[alertView release];
-			break;
-		}
-	}
-}
+//- (void) stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode
+//{
+//	switch(eventCode) {
+//		case NSStreamEventHasBytesAvailable:
+//		{
+//			char b[255]="\0";
+//			NSMutableData *data=[NSMutableData dataWithCapacity:0];
+//			unsigned int len = 0;
+//			while([(NSInputStream *)stream hasBytesAvailable])
+//			{
+//				len = [(NSInputStream *)stream read:(unsigned char *)b maxLength:254];
+//				
+//				if(!len) {
+//					if ([stream streamStatus] != NSStreamStatusAtEnd)
+//						[self _showAlert:@"Failed reading data from peer"];
+//					else 
+//						return;
+//				} else {
+//					//data recieved, append to data object
+//					b[len]='\0'; //make sure we have a terminating null
+//					[data appendBytes:b length:len];
+//				}
+//			}
+//			//extract data
+//			[self processDataWithData:data];
+//			//}
+//			break;
+//		}
+//		case NSStreamEventErrorOccurred:
+//		{
+//			//NSLog(@"%@", _cmd);
+//			[self _showAlert:@"Error encountered on stream!"];			
+//			break;
+//		}
+//			
+//		case NSStreamEventEndEncountered:
+//		{
+//			UIAlertView	*alertView;
+//			alertView = [[UIAlertView alloc] initWithTitle:@"Transfer Interupted" message:@"Remote host closed connection" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Continue", nil];
+//			[alertView show];
+//			[alertView release];
+//			break;
+//		}
+//	}
+//}
 
 @end

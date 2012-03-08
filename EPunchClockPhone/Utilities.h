@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "EZCommunicator.h"
 
-BOOL checkNetwork();
+//BOOL checkNetwork();
 NSData *encodePunchForSending(NSString *user, NSString *type,NSString *date, NSString *time, NSString *notes);
 
 @interface Utilities : NSObject {

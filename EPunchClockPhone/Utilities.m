@@ -8,45 +8,48 @@
 
 #import "Utilities.h"
 
-BOOL checkNetwork()
-{
-    NSString *hostname=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualHost"];
-    NSString *portString=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualPort"];
-    if(hostname==nil || portString==nil)
-        return NO;
-    int port=[portString intValue];
-    CFReadStreamRef readStream;
-	CFWriteStreamRef writeStream;
-	CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)hostname, port, &readStream, &writeStream);
-	
-	if(!readStream || !writeStream)
-	{
-		return NO;
-	}
-    NSInputStream * readNSStream=(NSInputStream *)readStream;
-    NSOutputStream * writeNSStream=(NSOutputStream *)writeStream;
-    [readNSStream open];
-    [writeNSStream open];
-    NSStreamStatus inStreamStatus=[readNSStream streamStatus];
-    NSStreamStatus outStreamStatus=[writeNSStream streamStatus];
-    
-    while (inStreamStatus==NSStreamStatusOpening) {
-        inStreamStatus=[readNSStream streamStatus];
-    }
-    
-    outStreamStatus=[writeNSStream streamStatus];
-    
-    if(inStreamStatus!=NSStreamStatusOpen || 
-       outStreamStatus!=NSStreamStatusOpen)
-    {
-        [readNSStream close];
-        [writeNSStream close];
-        return NO;
-    }
-    [readNSStream close];
-    [writeNSStream close];
-    return YES;
-}
+//BOOL checkNetwork()
+//{
+//    NSString *hostname=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualHost"];
+//    NSString *portString=[[NSUserDefaults standardUserDefaults] stringForKey:@"ManualPort"];
+//    if(hostname==nil || portString==nil)
+//        return NO;
+//    int port=[portString intValue];
+//    CFReadStreamRef readStream;
+//	CFWriteStreamRef writeStream;
+//	CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)hostname, port, &readStream, &writeStream);
+//	
+//	if(!readStream || !writeStream)
+//	{
+//		return NO;
+//	}
+//    NSInputStream * readNSStream=(NSInputStream *)readStream;
+//    NSOutputStream * writeNSStream=(NSOutputStream *)writeStream;
+//    [readNSStream open];
+//    [writeNSStream open];
+//    NSStreamStatus inStreamStatus=[readNSStream streamStatus];
+//    NSStreamStatus outStreamStatus=[writeNSStream streamStatus];
+//    
+//	int loopCount=0;
+//    while (inStreamStatus==NSStreamStatusOpening && loopCount<8) {
+//        inStreamStatus=[readNSStream streamStatus];
+//		[NSThread sleepForTimeInterval:.25];
+//		loopCount++;
+//    }
+//    
+//    outStreamStatus=[writeNSStream streamStatus];
+//    
+//    if(inStreamStatus!=NSStreamStatusOpen || 
+//       outStreamStatus!=NSStreamStatusOpen)
+//    {
+//        [readNSStream close];
+//        [writeNSStream close];
+//        return NO;
+//    }
+//    [readNSStream close];
+//    [writeNSStream close];
+//    return YES;
+//}
 
 NSData *encodePunchForSending(NSString *user, NSString *type,NSString *date, NSString *time, NSString *notes)
 {
