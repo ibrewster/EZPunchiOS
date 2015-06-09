@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -39,6 +39,8 @@
 		580C5CB9136619E70076A62E /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CB8136619E70076A62E /* gear.png */; };
 		580C5CBD136622040076A62E /* punchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580C5CBB136622040076A62E /* punchViewController.m */; };
 		580C5CBE136622040076A62E /* punchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 580C5CBC136622040076A62E /* punchView.xib */; };
+		582ADB951B2765A90094D6F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 582ADB941B2765A90094D6F1 /* Default-568h@2x.png */; };
+		582ADB971B2765F30094D6F1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 582ADB961B2765F30094D6F1 /* CoreLocation.framework */; };
 		585C1B2215093E0C00A2556E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 585C1B2115093E0C00A2556E /* Reachability.m */; };
 		585C1B2415093F3100A2556E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 585C1B2315093F3100A2556E /* SystemConfiguration.framework */; };
 		588E7C8614BB9DE8002A1980 /* loginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588E7C8414BB9DE7002A1980 /* loginViewController.m */; };
@@ -105,6 +107,8 @@
 		580C5CBA136622040076A62E /* punchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = punchViewController.h; sourceTree = "<group>"; };
 		580C5CBB136622040076A62E /* punchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = punchViewController.m; sourceTree = "<group>"; };
 		580C5CBC136622040076A62E /* punchView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = punchView.xib; sourceTree = "<group>"; };
+		582ADB941B2765A90094D6F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		582ADB961B2765F30094D6F1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		585C1B2015093E0C00A2556E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		585C1B2115093E0C00A2556E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		585C1B2315093F3100A2556E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -125,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				582ADB971B2765F30094D6F1 /* CoreLocation.framework in Frameworks */,
 				585C1B2415093F3100A2556E /* SystemConfiguration.framework in Frameworks */,
 				18DBDF0013632BA000DEF563 /* UIKit.framework in Frameworks */,
 				18DBDF0213632BA000DEF563 /* Foundation.framework in Frameworks */,
@@ -149,6 +154,7 @@
 		18DBDEF013632BA000DEF563 = {
 			isa = PBXGroup;
 			children = (
+				582ADB941B2765A90094D6F1 /* Default-568h@2x.png */,
 				585C1B2315093F3100A2556E /* SystemConfiguration.framework */,
 				58EA48DF137C63080006CE20 /* iPad */,
 				18DBDF0513632BA000DEF563 /* EZPunchPhone */,
@@ -170,6 +176,7 @@
 		18DBDEFE13632BA000DEF563 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				582ADB961B2765F30094D6F1 /* CoreLocation.framework */,
 				18E4563D136339210053EA71 /* CoreData.framework */,
 				18DBDEFF13632BA000DEF563 /* UIKit.framework */,
 				18DBDF0113632BA000DEF563 /* Foundation.framework */,
@@ -303,7 +310,7 @@
 			name = EZPunchPhoneTests;
 			productName = EPunchClockPhoneTests;
 			productReference = 18DBDF2513632BA100DEF563 /* EZPunchPhoneTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -311,10 +318,10 @@
 		18DBDEF213632BA000DEF563 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 18DBDEF513632BA000DEF563 /* Build configuration list for PBXProject "EZPunchPhone" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -349,6 +356,7 @@
 				580C5CB9136619E70076A62E /* gear.png in Resources */,
 				580C5CBE136622040076A62E /* punchView.xib in Resources */,
 				58EA48E2137C630D0006CE20 /* MainWindow-iPad.xib in Resources */,
+				582ADB951B2765A90094D6F1 /* Default-568h@2x.png in Resources */,
 				58EA48E7137C63500006CE20 /* HomeView.xib in Resources */,
 				588E7C8714BB9DE8002A1980 /* loginViewController.xib in Resources */,
 			);
@@ -461,7 +469,6 @@
 		18DBDF3613632BA100DEF563 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -470,6 +477,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -477,7 +485,6 @@
 		18DBDF3713632BA100DEF563 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
@@ -493,10 +500,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -510,7 +513,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "EPunchClockPhone/EZPunchPhone-Info.plist";
 				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -522,10 +525,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
@@ -539,7 +538,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "EPunchClockPhone/EZPunchPhone-Info.plist";
 				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

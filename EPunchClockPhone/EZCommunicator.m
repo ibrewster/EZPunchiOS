@@ -122,10 +122,10 @@
 		if ([inStream streamStatus]==NSStreamStatusError || [outStream streamStatus]==NSStreamStatusError) {
 			//stream error - no sense in waiting
 			//[self _showAlert:@"Communications Error"];
-			NSLog(@"Input Stream Status: %i",[inStream streamStatus]);
-			NSLog(@"Output Stream Status: %i",[outStream streamStatus]);
-			NSLog(@"Input Stream Error Code: %i, userInfo: %@",[[inStream streamError] code],[[inStream streamError] userInfo]);
-			NSLog(@"Output Stream Error Code: %i, userInfo: %@",[[outStream streamError] code],[[outStream streamError]userInfo]);
+			NSLog(@"Input Stream Status: %lu",(unsigned long)[inStream streamStatus]);
+			NSLog(@"Output Stream Status: %lu",(unsigned long)[outStream streamStatus]);
+			NSLog(@"Input Stream Error Code: %li, userInfo: %@",(long)[[inStream streamError] code],[[inStream streamError] userInfo]);
+			NSLog(@"Output Stream Error Code: %li, userInfo: %@",(long)[[outStream streamError] code],[[outStream streamError]userInfo]);
 			return NO;
 		}
 		sleep(1);
@@ -135,7 +135,7 @@
 	{
 		if([outStream write:(const uint8_t *)[data bytes] maxLength:[data length]] == -1)
 		{
-			NSLog(@"Stream status: %i",[outStream streamStatus]);
+			NSLog(@"Stream status: %lu",(unsigned long)[outStream streamStatus]);
 			NSLog(@"Write error occured: %@",[outStream streamError]);
 			[self showAlert:@"Failed sending data to peer"];
 			return NO;

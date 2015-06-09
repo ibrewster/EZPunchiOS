@@ -386,15 +386,14 @@
 	else
 		[dateFormatter setDateFormat:@"HH:mm"];
 	NSString * formatedTime=[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:currentTime]];
-	//NSString * greeting=[[NSString alloc] initWithFormat:@"%@", [currentTime description]];
 	
 	CGSize maximumSize=CGSizeMake(280, 160);
 	UIFont *timeFont=timeLabel.font;
-	CGSize timeStringSize=[formatedTime sizeWithFont:timeFont 
-								   constrainedToSize:maximumSize 
+	CGSize timeStringSize=[formatedTime sizeWithFont:timeFont
+								   constrainedToSize:maximumSize
 									   lineBreakMode:self.timeLabel.lineBreakMode];
-	CGRect timeFrame=CGRectMake(20, 20, 280, timeStringSize.height);
-	self.timeLabel.frame=timeFrame;
+	self.timeHeight.constant=timeStringSize.height;
+	
     timeLabel.text = formatedTime;
     [formatedTime release];
 		//[currentTime release];
@@ -419,6 +418,11 @@
     managedObjectContext=utils.managedObjectContext;
     [self startRepeatingTimer:self];
 
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+	[timeLabel setAdjustsFontSizeToFitWidth:YES];
+	[self setTime:self];
 }
 
 -(void)viewDidAppear:(BOOL)animated

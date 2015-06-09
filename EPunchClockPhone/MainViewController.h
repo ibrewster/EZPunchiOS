@@ -29,6 +29,7 @@
 @property (nonatomic, retain) NSMutableDictionary *usersDict;
 @property (nonatomic, retain) IBOutlet UITextField *textField;
 @property (nonatomic, retain) IBOutlet UILabel *timeLabel;
+@property (nonatomic, retain) IBOutlet NSLayoutConstraint *timeHeight;
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
 @property (nonatomic, retain) NSDate *currentDate;
 @property (nonatomic, retain) Utilities *utils;
