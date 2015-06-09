@@ -8,16 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "Utilities.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface EPunchClockPhoneAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, UINavigationControllerDelegate> {
+
+@interface EPunchClockPhoneAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate> {
 	Utilities *util;
+	BOOL pushedController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) CLLocationManager *locationManager;
 
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 
+
 -(IBAction)submitLogin:(id)sender withUser:(NSString *)user;
+
+-(NSString *)deviceLocation;
 
 @end

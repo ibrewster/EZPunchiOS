@@ -12,6 +12,7 @@
 #import "punchViewController.h"
 #import "loginViewController.h"
 
+
 @implementation EPunchClockPhoneAppDelegate
 
 
@@ -22,6 +23,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	//configure location manager and start checking for updates
+	if (self.locationManager==nil) {
+		self.locationManager=[[CLLocationManager alloc] init];
+	}
+	
+	self.locationManager.delegate=self;
+	if ([CLLocationManager locationServicesEnabled] )
+		[self.locationManager startMonitoringSignificantLocationChanges];
+	
 	id checkForWarnSetting=[[NSUserDefaults standardUserDefaults] objectForKey:@"showLocalWarning"];
 	
 	if(checkForWarnSetting==nil) //key does not exist
@@ -42,6 +52,7 @@
     if([usersDict count]==0)
     {
 		[self.navigationController pushViewController:self.tabBarController animated:YES];
+		pushedController=true;
     }	
 
     //self.window.rootViewController = self.tabBarController;
@@ -67,6 +78,13 @@
     return YES;
 }
 
+- (NSString *)deviceLocation {
+	if (![CLLocationManager locationServicesEnabled] ) {
+		return @"iPhone";
+	}
+	return [NSString stringWithFormat:@"latitude: %f longitude: %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -86,6 +104,7 @@
 	if ([viewControllers containsObject:self.tabBarController] && 
 		[[[NSUserDefaults standardUserDefaults] valueForKey:@"login"] isEqualToString:@"True"]) {
 		[self.navigationController popViewControllerAnimated:NO];
+		pushedController=false;
 	}
 }
 
@@ -103,9 +122,10 @@
      */
 	NSArray *viewControllers=[self.navigationController viewControllers];
 	
-	if(![viewControllers containsObject:self.tabBarController] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"login"] isEqualToString:@"True"])
+	if(!pushedController && ![viewControllers containsObject:self.tabBarController] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"login"] isEqualToString:@"True"])
     {
 		[self.navigationController pushViewController:self.tabBarController animated:NO];
+		pushedController=true;
     }	
 }
 
@@ -142,7 +162,8 @@
 - (IBAction)submitLogin:(id)sender withUser:(NSString *)user
 {
 	
-		[self.navigationController pushViewController:self.tabBarController animated:YES];
+	[self.navigationController pushViewController:self.tabBarController animated:YES];
+	pushedController=true;
 }
 
 @end

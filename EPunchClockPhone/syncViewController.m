@@ -83,11 +83,13 @@
 	CGSize keyboardSize = [aValue CGRectValue].size;
 	
 	NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	UIViewAnimationCurve *animationCurve=[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
 	CGRect frame = self.view.frame;
-	frame.origin.y -= keyboardSize.height-44;
-	frame.size.height += keyboardSize.height-44;
+	frame.origin.y -= keyboardSize.height-50;
+	//frame.size.height += keyboardSize.height-44;
 	[UIView beginAnimations:@"ResizeForKeyboard" context:nil];
 	[UIView setAnimationDuration:animationDuration];
+	[UIView setAnimationCurve:animationCurve];
 	self.view.frame = frame;
 	[UIView commitAnimations];
 	
@@ -99,15 +101,15 @@
 - (void)keyboardWasHidden:(NSNotification *)aNotification {
     if ( viewMoved ) {
         NSDictionary *info = [aNotification userInfo];
-        NSValue *aValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
-        CGSize keyboardSize = [aValue CGRectValue].size;
 		
         NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+		UIViewAnimationCurve *animationCurve=[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
+		
         CGRect frame = self.view.frame;
-        frame.origin.y += keyboardSize.height-44;
-        frame.size.height -= keyboardSize.height-44;
+		frame.origin.y=0;
         [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
         [UIView setAnimationDuration:animationDuration];
+		[UIView setAnimationCurve:animationCurve];
         self.view.frame = frame;
         [UIView commitAnimations];
 		
@@ -122,11 +124,11 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(keyboardWasShown:)
-												 name:UIKeyboardDidShowNotification
+												 name:UIKeyboardWillShowNotification
 											   object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(keyboardWasHidden:)
-												 name:UIKeyboardDidHideNotification
+												 name:UIKeyboardWillHideNotification
 											   object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(processData:) 

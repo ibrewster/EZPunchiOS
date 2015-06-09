@@ -64,16 +64,22 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+	if (users==nil) {
+		users=[[[[[NSUserDefaults standardUserDefaults]
+				  dictionaryForKey:@"users"]
+				 allKeys]
+				sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]
+			   retain];
+
+	}
+	
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	
-	
-	users=[[[[[NSUserDefaults standardUserDefaults] 
-			  dictionaryForKey:@"users"] 
-			 allKeys] 
-			sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]
-		   retain];
 	
 	
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -107,6 +113,7 @@
 {
 	[super viewDidDisappear:animated];
 	[users release];
+	users=nil;
 	[fetchResults release];
 }
 

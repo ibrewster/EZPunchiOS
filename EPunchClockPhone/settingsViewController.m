@@ -9,6 +9,7 @@
 #import "settingsViewController.h"
 #import "punches.h"
 #import "unistd.h"
+#import "EPunchClockPhoneAppDelegate.h"
 
 @implementation settingsViewController
 
@@ -20,12 +21,13 @@
 @synthesize managedObjectContext;
 @synthesize showWarn;
 
-- (void)viewDidAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewDidAppear:animated];
 	
 	NSString *lastUser=[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedUser"];
 
-	arrayUsers=[[NSMutableArray arrayWithCapacity:0] retain];
+	if(arrayUsers==nil)
+		arrayUsers=[[NSMutableArray arrayWithCapacity:0] retain];
 	NSString *needLogin=[[NSUserDefaults standardUserDefaults] stringForKey:@"login"];
 	if ([needLogin isEqualToString:@"True"]) {
 		if (lastUser && [[[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"users"] allKeys] containsObject:lastUser]) {
@@ -55,8 +57,11 @@
 	else
 		[currentUser selectRow:-1 inComponent:0 animated:NO];
 	
-	curLocation.text=[[NSUserDefaults standardUserDefaults] valueForKey:@"location"];
-	if (curLocation.text==nil) {
+	//get the user's current location
+	EPunchClockPhoneAppDelegate *app=(EPunchClockPhoneAppDelegate *)[[UIApplication sharedApplication] delegate];
+	curLocation.text=[app deviceLocation];
+	
+	if (curLocation.text==nil || [curLocation.text isEqualToString:@""]) {
 		curLocation.text=@"iPhone";
 	}
 	
@@ -66,6 +71,7 @@
 - (void) viewDidDisappear:(BOOL)animated
 {
 	[arrayUsers release];
+	arrayUsers=nil;
 }
 
 // Code for the Rounding slider
@@ -79,7 +85,6 @@
 }
 
 -(IBAction)setLocation:(id)sender{
-	
 	[[NSUserDefaults standardUserDefaults] setObject:curLocation.text forKey:@"location"];
 	[curLocation resignFirstResponder];
 }

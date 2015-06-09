@@ -19,6 +19,13 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <pickerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="46">
+                    <rect key="frame" x="20" y="41" width="280" height="162"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="57"/>
+                        <outlet property="delegate" destination="-1" id="55"/>
+                    </connections>
+                </pickerView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="User:" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="47">
                     <rect key="frame" x="20" y="20" width="42" height="21"/>
                     <constraints>
@@ -29,19 +36,19 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <switch opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="48">
-                    <rect key="frame" x="251" y="253" width="51" height="31"/>
+                    <rect key="frame" x="251" y="245" width="51" height="31"/>
                     <connections>
                         <action selector="setRound:" destination="-1" eventType="valueChanged" id="52"/>
                     </connections>
                 </switch>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="Round Times:" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="49">
-                    <rect key="frame" x="20" y="258" width="107" height="21"/>
+                    <rect key="frame" x="20" y="250" width="107" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.96739131" green="0.96739131" blue="0.96739131" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="iPhone" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="63">
-                    <rect key="frame" x="97" y="214" width="203" height="31"/>
+                    <rect key="frame" x="97" y="206" width="203" height="31"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="203" id="95"/>
                         <constraint firstAttribute="height" constant="31" id="96"/>
@@ -55,7 +62,7 @@
                     </connections>
                 </textField>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Location:" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="64">
-                    <rect key="frame" x="20" y="219" width="69" height="21"/>
+                    <rect key="frame" x="20" y="211" width="69" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="69" id="78"/>
                     </constraints>
@@ -64,7 +71,7 @@
                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Local Storage Warning:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="71">
-                    <rect key="frame" x="20" y="297" width="183" height="21"/>
+                    <rect key="frame" x="20" y="289" width="183" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="183" id="76"/>
                     </constraints>
@@ -73,18 +80,11 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72" userLabel="StorageWarningSwitch">
-                    <rect key="frame" x="251" y="292" width="51" height="31"/>
+                    <rect key="frame" x="251" y="284" width="51" height="31"/>
                     <connections>
                         <action selector="setShowWarning:" destination="-1" eventType="valueChanged" id="75"/>
                     </connections>
                 </switch>
-                <pickerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="46">
-                    <rect key="frame" x="20" y="49" width="280" height="162"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="57"/>
-                        <outlet property="delegate" destination="-1" id="55"/>
-                    </connections>
-                </pickerView>
             </subviews>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
@@ -93,18 +93,22 @@
                 <constraint firstItem="47" firstAttribute="top" secondItem="40" secondAttribute="top" constant="20" symbolic="YES" id="82"/>
                 <constraint firstItem="49" firstAttribute="centerY" secondItem="48" secondAttribute="centerY" id="87"/>
                 <constraint firstItem="64" firstAttribute="centerY" secondItem="63" secondAttribute="centerY" id="91"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="71" secondAttribute="bottom" constant="20" symbolic="YES" id="0YY-j4-FbI"/>
                 <constraint firstAttribute="trailing" secondItem="63" secondAttribute="trailing" constant="20" symbolic="YES" id="2qy-wT-5KH"/>
                 <constraint firstItem="64" firstAttribute="leading" secondItem="40" secondAttribute="leading" constant="20" symbolic="YES" id="5zr-IB-4ve"/>
                 <constraint firstItem="46" firstAttribute="leading" secondItem="40" secondAttribute="leading" constant="20" symbolic="YES" id="6dz-0H-fhR"/>
+                <constraint firstItem="49" firstAttribute="top" secondItem="63" secondAttribute="bottom" constant="13" id="8bz-Sh-RyD"/>
                 <constraint firstItem="72" firstAttribute="top" secondItem="48" secondAttribute="bottom" constant="8" symbolic="YES" id="A8R-P2-fQf"/>
                 <constraint firstItem="64" firstAttribute="top" secondItem="46" secondAttribute="bottom" constant="8" symbolic="YES" id="L4U-Qd-XXX"/>
                 <constraint firstItem="48" firstAttribute="top" secondItem="63" secondAttribute="bottom" constant="8" id="Nvo-Oe-4GD"/>
                 <constraint firstItem="71" firstAttribute="leading" secondItem="40" secondAttribute="leading" constant="20" symbolic="YES" id="UZO-YY-U0b"/>
                 <constraint firstItem="49" firstAttribute="leading" secondItem="40" secondAttribute="leading" constant="20" symbolic="YES" id="atb-z2-ItD"/>
                 <constraint firstItem="71" firstAttribute="centerY" secondItem="72" secondAttribute="centerY" id="kf6-Q1-5V8"/>
-                <constraint firstItem="46" firstAttribute="top" secondItem="47" secondAttribute="bottom" constant="8" symbolic="YES" id="mLc-gY-vUR"/>
+                <constraint firstItem="46" firstAttribute="top" secondItem="47" secondAttribute="bottom" id="mLc-gY-vUR"/>
+                <constraint firstItem="71" firstAttribute="centerY" secondItem="72" secondAttribute="centerY" id="p1C-G5-Sfl"/>
                 <constraint firstAttribute="trailing" secondItem="72" secondAttribute="trailing" constant="20" symbolic="YES" id="t1X-ye-dff"/>
                 <constraint firstAttribute="trailing" secondItem="46" secondAttribute="trailing" constant="20" symbolic="YES" id="ufo-4U-ou4"/>
+                <constraint firstItem="48" firstAttribute="centerY" secondItem="49" secondAttribute="centerY" id="wQL-Bi-ix0"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
             <point key="canvasLocation" x="520" y="387"/>

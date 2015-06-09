@@ -319,6 +319,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0630;
+				TargetAttributes = {
+					18DBDEFA13632BA000DEF563 = {
+						DevelopmentTeam = 59ED27HUEF;
+					};
+				};
 			};
 			buildConfigurationList = 18DBDEF513632BA000DEF563 /* Build configuration list for PBXProject "EZPunchPhone" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -525,7 +530,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
