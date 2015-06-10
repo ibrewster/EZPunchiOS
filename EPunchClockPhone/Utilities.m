@@ -7,6 +7,7 @@
 //
 
 #import "Utilities.h"
+#import "EPunchClockPhoneAppDelegate.h"
 
 //BOOL checkNetwork()
 //{
@@ -62,10 +63,15 @@ NSData *encodePunchForSending(NSString *user, NSString *type,NSString *date, NSS
     if(notes==nil)
         notes=@"";
     [data appendFormat:@"%@\n",notes];
-    NSString *location=[[NSUserDefaults standardUserDefaults] stringForKey:@"location"];
-    if (location==nil) {
+	
+	//get the current location.
+	EPunchClockPhoneAppDelegate *app=(EPunchClockPhoneAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSString *location=app.deviceLocation;
+	
+    if (location==nil || [location isEqualToString:@""]) {
         location=@"iPhone";
     }
+	
     [data appendFormat:@"%@|",location];
     return [data dataUsingEncoding:NSASCIIStringEncoding];
 }

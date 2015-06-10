@@ -21,10 +21,9 @@
 
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
+@property (nonatomic, retain) NSString *deviceLocation;
 
 
 -(IBAction)submitLogin:(id)sender withUser:(NSString *)user;
-
--(NSString *)deviceLocation;
 
 @end

@@ -49,5 +49,7 @@
 	<array/>
 	<key>UTImportedTypeDeclarations</key>
 	<array/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Records the location of punches</string>
 </dict>
 </plist>

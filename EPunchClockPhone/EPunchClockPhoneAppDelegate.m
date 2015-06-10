@@ -17,6 +17,8 @@
 
 
 @synthesize window=_window;
+@synthesize locationManager;
+@synthesize deviceLocation;
 
 @synthesize tabBarController=_tabBarController;
 @synthesize navigationController=_navigationController;
@@ -24,13 +26,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	//configure location manager and start checking for updates
-	if (self.locationManager==nil) {
-		self.locationManager=[[CLLocationManager alloc] init];
+	if (locationManager==nil) {
+		locationManager=[[CLLocationManager alloc] init];
 	}
+	locationManager.delegate=self;
 	
-	self.locationManager.delegate=self;
-	if ([CLLocationManager locationServicesEnabled] )
-		[self.locationManager startMonitoringSignificantLocationChanges];
+	locationManager.delegate=self;
+	if ([CLLocationManager locationServicesEnabled] ){
+		locationManager.desiredAccuracy=kCLLocationAccuracyBest;
+		locationManager.distanceFilter=500; //only update if they move half a klick or more
+		[locationManager requestWhenInUseAuthorization];
+		[locationManager startUpdatingLocation];
+	}
 	
 	id checkForWarnSetting=[[NSUserDefaults standardUserDefaults] objectForKey:@"showLocalWarning"];
 	
@@ -78,19 +85,15 @@
     return YES;
 }
 
-- (NSString *)deviceLocation {
-	if (![CLLocationManager locationServicesEnabled] ) {
-		return @"iPhone";
-	}
-	return [NSString stringWithFormat:@"latitude: %f longitude: %f", self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude];
-}
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
      Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
      */
+	if(locationManager!=nil){
+		[locationManager stopUpdatingLocation];
+	}
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -120,6 +123,10 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+	if(locationManager!=nil){
+		[locationManager startUpdatingLocation];
+	}
+	
 	NSArray *viewControllers=[self.navigationController viewControllers];
 	
 	if(!pushedController && ![viewControllers containsObject:self.tabBarController] && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"login"] isEqualToString:@"True"])
@@ -164,6 +171,67 @@
 	
 	[self.navigationController pushViewController:self.tabBarController animated:YES];
 	pushedController=true;
+}
+
+#pragma mark -
+#pragma mark Core Location Delegate
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+	CLLocation *location = [locations lastObject];
+	CLGeocoder *geocoder=[[CLGeocoder alloc]init];
+
+	[geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error)
+	 {
+		 if (deviceLocation!=nil) {
+			 [deviceLocation release]; //let my old strings go!
+		 }
+		 
+		 if (error == nil && [placemarks count] > 0)
+		 {
+			 // CLPlacemark * placemark = [placemarks lastObject];
+			 CLPlacemark * placemark = [placemarks objectAtIndex:0];
+			 
+			 // strAdd -> take bydefault value nil
+			 NSString *strAdd = nil;
+			 
+			 if ([placemark.subThoroughfare length] != 0)
+				 strAdd = placemark.subThoroughfare;
+			 
+			 if ([placemark.thoroughfare length] != 0)
+			 {
+				 // strAdd -> store value of current location
+				 if ([strAdd length] != 0)
+					 strAdd = [NSString stringWithFormat:@"%@ %@",strAdd,[placemark thoroughfare]];
+				 else
+				 {
+					 // strAdd -> store only this value,which is not null
+					 strAdd = placemark.thoroughfare;
+				 }
+			 }
+			 
+			 if ([placemark.postalCode length] != 0)
+			 {
+				 if ([strAdd length] != 0)
+					 strAdd = [NSString stringWithFormat:@"%@, %@",strAdd,[placemark postalCode]];
+				 else
+					 strAdd = placemark.postalCode;
+			 }
+			 deviceLocation=[[NSString stringWithString:strAdd] retain];
+		 }
+		 else{
+			 deviceLocation=[[NSString stringWithFormat:@"lat: %f lng: %f",
+							 location.coordinate.latitude,
+							 location.coordinate.longitude] retain];
+		 }
+	 }];
+	 
+//	NSLog(@"latitude %+.6f, longitude %+.6f\n",
+//		  location.coordinate.latitude,
+//		  location.coordinate.longitude);
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
+	NSLog(@"%@",error);
 }
 
 @end

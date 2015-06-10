@@ -59,7 +59,7 @@
 	
 	//get the user's current location
 	EPunchClockPhoneAppDelegate *app=(EPunchClockPhoneAppDelegate *)[[UIApplication sharedApplication] delegate];
-	curLocation.text=[app deviceLocation];
+	curLocation.text=app.deviceLocation;
 	
 	if (curLocation.text==nil || [curLocation.text isEqualToString:@""]) {
 		curLocation.text=@"iPhone";
